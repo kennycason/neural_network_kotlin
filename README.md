@@ -30,6 +30,7 @@ Sample generated ouptut: (click [here](https://raw.githubusercontent.com/kennyca
 
 ![MNIST Error Graph](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_error_graph.png)
 
+![MNIST Error Graph](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_1m_error_graph.png)
 
 # Random Vectors
 
