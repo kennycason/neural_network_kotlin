@@ -15,14 +15,14 @@ class MNISTAutoEncoderTest {
         val visibleSize = 28 * 28
         val hiddenSize = (visibleSize * 0.75).toInt()
         val layer = AutoEncoder(
-                learningRate = 0.1,
+                learningRate = 0.075,
                 visibleSize = visibleSize,
                 hiddenSize = hiddenSize,
                 log = false)
 
         val start = System.currentTimeMillis()
         val rand = Random()
-        (0.. 100_000).forEach { i ->
+        (0.. 1_000_000).forEach { i ->
             val x = xs.getRow(rand.nextInt(xs.rows))
             layer.learn(x, 1)
 
