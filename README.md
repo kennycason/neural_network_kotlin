@@ -25,7 +25,7 @@ Steps: 100,000
 Algorithm: Stochastic Gradient Descent
 Error: ~3.5 (Squared error of pixel error per image, training data)
 
-<a href="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_100k_steps_generated.png" target="new"><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_100k_steps_generated_subset.png" width="350px"/></a><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_100k_steps_error_graph.png" width="350px"/>
+<a href="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_100k_steps_generated.png" target="new"><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_100k_steps_generated_subset.png" width="400px"/></a><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_100k_steps_error_graph.png" width="400px"/>
 
 click image to see all 60,000k reconstructions.
 
@@ -36,7 +36,7 @@ Steps: 1,000,000
 Algorithm: Stochastic Gradient Descent
 Error: ~2.6 (Squared error of pixel error per image, training data)
 
-<a href="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_1m_steps_generated.png" target="new"><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_1m_steps_generated_subset.png" width="350px"/></a><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_1m_steps_error_graph.png" width="350px"/>
+<a href="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_1m_steps_generated.png" target="new"><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_1m_steps_generated_subset.png" width="400px"/></a><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_1m_steps_error_graph.png" width="400px"/>
 
 click image to see all 60,000k reconstructions.
 
@@ -47,7 +47,7 @@ Algorithm: Stochastic Gradient Descent
 Error: ~5.6 (Squared error of pixel error per image, training data)
 
 <a href="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_deep_autoencoder_250k_steps_generated.png" target="new">
-<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_deep_autoencoder_250k_steps_generated_subset.png" width="350px"/>
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_deep_autoencoder_250k_steps_generated_subset.png" width="400px"/>
 </a>
 
 click image to see all 60,000k reconstructions.
@@ -56,7 +56,7 @@ click image to see all 60,000k reconstructions.
 
 Below are a few error graphs of a single layer Auto Encoder learing random vectors.
 
-<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/100d_random_vector_auto_encoder_error_graph.png" width="350px"/>
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/100d_random_vector_auto_encoder_error_graph.png" width="400px"/>
 
 # Notes
 
