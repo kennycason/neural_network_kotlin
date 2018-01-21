@@ -19,18 +19,39 @@ This project is my Neural Network playground in Kotlin. I'll be porting all my m
 
 # MNIST Training Results
 
+### Single Layer AutoEncoder
 Training Rate: 0.1
 Steps: 100,000
 Algorithm: Stochastic Gradient Descent
 Error: ~3.5 (Squared error of pixel error per image, training data)
 
-Sample generated ouptut: (click [here](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_generated.png) to see all 60,000k reconstructions).
+Sample generated ouptut: (click [here](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_generated_100k_steps.png) to see all 60,000k reconstructions).
 
-![MNIST Learned Subset](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_generated_subset.png)
+![MNIST Learned Subset](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_generated_subset_100k_steps.png)
 
-![MNIST Error Graph](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_error_graph.png)
+![MNIST Error Graph](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_100k_steps_error_graph.png)
+
+### Single Layer AutoEncoder
+Training Rate: 0.05
+Steps: 1,000,000
+Algorithm: Stochastic Gradient Descent
+Error: ~2.6 (Squared error of pixel error per image, training data)
+
+Sample generated ouptut: (click [here](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_generated_1m_steps.png) to see all 60,000k reconstructions).
+
+![MNIST Learned Subset](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_generated_subset_1m_steps.png)
 
 ![MNIST Error Graph](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_1m_steps_error_graph.png)
+
+### Deep AutoEncoder
+Training Rate: 0.1
+Steps: 250,000
+Algorithm: Stochastic Gradient Descent
+Error: ~6.5 (Squared error of pixel error per image, training data)
+
+Sample generated ouptut: (click [here](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_deep_autoencoder_generated_subset_250k_steps.png) to see all 60,000k reconstructions).
+
+![MNIST Learned Subset](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_deep_autoencoder_generated_250k_steps.png)
 
 # Random Vectors
 

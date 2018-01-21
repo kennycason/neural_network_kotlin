@@ -50,7 +50,7 @@ class DeepAutoEncoderTest {
                        // arrayOf((vectorSize * 0.25).toInt(), (vectorSize * 0.10).toInt())
                 ),
                 learningRate = 0.1f,
-                log = false)
+                log = true)
 
         // train
         val start = System.currentTimeMillis()

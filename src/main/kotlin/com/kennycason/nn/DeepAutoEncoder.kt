@@ -2,10 +2,13 @@ package com.kennycason.nn
 
 import com.kennycason.nn.math.Errors
 import org.jblas.FloatMatrix
+import java.util.*
 
 class DeepAutoEncoder(layerDimensions: Array<Array<Int>>,
                       learningRate: Float = 0.1f,
                       private val log: Boolean = false) {
+
+    private val random = Random()
 
     private val layers: Array<AutoEncoder> = Array(
             layerDimensions.size,
@@ -14,10 +17,10 @@ class DeepAutoEncoder(layerDimensions: Array<Array<Int>>,
                         learningRate = learningRate,
                         visibleSize = layerDimensions[i][0],
                         hiddenSize = layerDimensions[i][1],
-                        log = log)
+                        log = false)
             })
 
-    fun learn(xs: Collection<FloatMatrix>, steps: Int = 1000) {
+    fun learn(xs: List<FloatMatrix>, steps: Int = 1000) {
         var currentFeatures = xs
         layers.forEachIndexed { i, layer ->
             if (log) {
@@ -26,20 +29,27 @@ class DeepAutoEncoder(layerDimensions: Array<Array<Int>>,
 
             (0.. steps).forEach { j ->
                 // train each sample once
-                currentFeatures.forEach { x ->
-                    layer.learn(x, 1)
-                }
+//                currentFeatures.forEach { x ->
+//                    layer.learn(x, 1)
+//                }
 
-                // report error
-                if (j % 10 == 0) {
-                    val error = currentFeatures
-                            .map { x -> Errors.compute(x, layer.feedForward(x)) }
-                            .sum() / currentFeatures.size
+                // sgd
+                val x = currentFeatures[random.nextInt(currentFeatures.size)]
+                layer.learn(x, 1)
+
+                // report error for current training data TODO report rolling avg error
+                if (j % 10 == 0 && log) {
+//                    val error = currentFeatures
+//                            .map { x -> Errors.compute(x, layer.feedForward(x)) }
+//                            .sum() / currentFeatures.size
+
+                    val error = Errors.compute(x, layer.feedForward(x))
                     println("$j -> error: $error")
                 }
             }
 
             // generate encoded features to pass on to next layer
+            println("encoding features for next layer training")
             currentFeatures = currentFeatures
                     .map { x -> layer.encode(x) }
                     .toList()

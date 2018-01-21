@@ -4,6 +4,7 @@ import com.kennycason.nn.data.*
 import com.kennycason.nn.math.Errors
 import org.jblas.FloatMatrix
 import org.junit.Test
+import java.io.File
 import java.util.*
 
 class MNISTAutoEncoderTest {
@@ -22,7 +23,7 @@ class MNISTAutoEncoderTest {
 
         val start = System.currentTimeMillis()
         val rand = Random()
-        (0.. 100_000).forEach { i ->
+        (0.. 1_000_000).forEach { i ->
             val x = xs.getRow(rand.nextInt(xs.rows))
             layer.learn(x, 1)
 
@@ -48,6 +49,7 @@ class MNISTAutoEncoderTest {
                 println("input:\n" + PrintUtils.toPixelBox(x.toArray(), 28, 0.5))
                 println("output:\n" + PrintUtils.toPixelBox(y.toArray(), 28, 0.7))
                 println("error: $error")
+                println("$i/${xs.rows}")
             }
             errorSum += error
         }
@@ -60,7 +62,16 @@ class MNISTAutoEncoderTest {
                 rows = 245,
                 cols = 245)
 
-        image.save("/tmp/mnist_autoencoder_generated_floats.png")
+        image.save("/tmp/mnist_autoencoder_generated.png")
+
+        val weightFile = File("/tmp/experiment/mnist_auto_encoder_weights.log")
+        weightFile.writeText(
+                "encode:\n" +
+                        layer.encode.toString("%f", "[", "]", ", ", "\n") + "\n" +
+                        "decode:\n" +
+                        layer.decode.toString("%f", "[", "]", ", ", "\n") + "\n"
+        )
+
     }
 
 }
