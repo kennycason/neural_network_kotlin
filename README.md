@@ -1,5 +1,7 @@
 Neural Networks in Kotlin
+=========================
 
+This project is my Neural Network playground in Kotlin. I'll be porting all my miscellaneous NN code from various codebases to this project.
 
 # Neural Networks
 
