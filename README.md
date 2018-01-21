@@ -7,6 +7,7 @@ This project is my Neural Network playground in Kotlin. I'll be porting all my m
 
 - Autoencoder
 - Stacked (Deep) Autoencoder
+- Feature Clustering via Autoencoder
 - Hebbian Learning
 
 
@@ -19,7 +20,7 @@ This project is my Neural Network playground in Kotlin. I'll be porting all my m
 
 # MNIST Training Results
 
-### Single Layer AutoEncoder
+### Single Layer Autoencoder
 Training Rate: 0.1
 Steps: 100,000
 Algorithm: Stochastic Gradient Descent
@@ -30,7 +31,7 @@ Error: ~3.5 (Squared error of pixel error per image, training data)
 click image to see all 60,000k reconstructions.
 
 
-### Single Layer AutoEncoder
+### Single Layer Autoencoder
 Training Rate: 0.05
 Steps: 1,000,000
 Algorithm: Stochastic Gradient Descent
@@ -40,7 +41,7 @@ Error: ~2.6 (Squared error of pixel error per image, training data)
 
 click image to see all 60,000k reconstructions.
 
-### Deep AutoEncoder
+### Deep Autoencoder
 Training Rate: 0.1
 Steps: 250,000
 Algorithm: Stochastic Gradient Descent
@@ -54,9 +55,16 @@ click image to see all 60,000k reconstructions.
 
 # Random Vectors
 
-Below are a few error graphs of a single layer Auto Encoder learing random vectors.
+Below are a few error graphs of a single layer autoencoder learing random vectors.
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/100d_random_vector_auto_encoder_error_graph.png" width="400px"/>
+
+
+# Feature Clustering
+
+A byproduct of an autoencoder learning to encode features, is that through the encoding/compression process, feature clustering also occurs. Below is a sample of a deep autoencoder learning to encode feature vectors representing republican and democrats voting history. The deepest most layer maps to a small 2-dimensional feature vector so that we can easily visualize the encoding on a x-y plot. There is a clear trend showing democratic votes clustered to the top, and republican to the bottom. Unsurprisingly, there is also some overlap demonstrating cases where democrats and republicans share overlapping votes.
+
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_auto_encoder_voter_feature_clustering.png" width="450px"/>
 
 # Notes
 
