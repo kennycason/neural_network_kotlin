@@ -45,3 +45,5 @@ Since SGD, mini batch = 1, is noisy, the error signal will spike up and down wil
 ```awk '{sum+=$1} (NR%10)==0{print sum/10; sum=0;}' /tmp/raw_errors.log > /tmp/avg_erros.log```
 
 You can also batch up groups and average in code.
+
+I also don't recommend running running `mvn test` as unfortunately most of my code's entry points are view `@Test` annotations. :) 
