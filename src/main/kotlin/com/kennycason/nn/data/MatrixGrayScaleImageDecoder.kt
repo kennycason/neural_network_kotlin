@@ -1,12 +1,12 @@
 package com.kennycason.nn.data
 
-import org.jblas.DoubleMatrix
+import org.jblas.FloatMatrix
 import java.awt.image.BufferedImage
 
 class MatrixGrayScaleImageDecoder(private val threshold: Double = 0.5,
                                   rows: Int) : MatrixImageDecoder(rows) {
 
-    override fun decode(data: DoubleMatrix): Image {
+    override fun decode(data: FloatMatrix): Image {
         val cols = data.columns / rows
         val bi = BufferedImage(cols, rows, BufferedImage.TYPE_INT_RGB)
         for (x in 0 until rows * cols) {

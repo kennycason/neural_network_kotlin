@@ -1,11 +1,11 @@
 package com.kennycason.nn
 
 class Hebbian(size: Int,
-              private val l: Double = 0.1) {
+              private val l: Float = 0.1f) {
 
-    val weights = DoubleArray(size, { 1.0 } )
+    val weights = FloatArray(size, { 1.0f } )
 
-    fun learn(xs: Array<DoubleArray>) {
+    fun learn(xs: Array<FloatArray>) {
         for (x in xs) {
             val output = evaluate(x)
             // update weights
@@ -15,7 +15,7 @@ class Hebbian(size: Int,
         }
     }
 
-    fun evaluate(x: DoubleArray) = weights
+    fun evaluate(x: FloatArray) = weights
             .mapIndexed { i, w -> w * x[i] }
             .sum()
 }

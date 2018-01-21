@@ -4,7 +4,7 @@ import com.kennycason.nn.AutoEncoder
 import com.kennycason.nn.math.Errors
 import com.kennycason.nn.data.MNISTImageLoader
 import com.kennycason.nn.data.PrintUtils
-import org.jblas.DoubleMatrix
+import org.jblas.FloatMatrix
 import org.junit.Test
 import java.io.File
 import java.util.*
@@ -16,11 +16,11 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
 
     @Test
     fun mnistDataSet() {
-        val xs = MNISTImageLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte").div(255.0)
+        val xs = MNISTImageLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte")
 
         val visibleSize = 28 * 28
         val hiddenSize = (visibleSize * 0.75).toInt()
-        val learningRate = 0.1
+        val learningRate = 0.1f
 
         (1.. 10).forEach { x ->
             // control
@@ -34,7 +34,7 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
                     id = "${x}_standard",
                     layer = layer,
                     xs = xs,
-                    featureActivator = FeatureActivator(layer = layer, activationRate = 0.005),
+                    featureActivator = FeatureActivator(layer = layer, activationRate = 0.005f),
                     activateFeatures = false
             )
 
@@ -48,7 +48,7 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
                     id = "${x}_feature_activation",
                     layer = layer2,
                     xs = xs,
-                    featureActivator = FeatureActivator(layer = layer2, activationRate = 0.005),
+                    featureActivator = FeatureActivator(layer = layer2, activationRate = 0.005f),
                     activateFeatures = true
             )
         }
@@ -56,7 +56,7 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
 
     private fun runExperiment(id: String,
                               layer: AutoEncoder,
-                              xs: DoubleMatrix,
+                              xs: FloatMatrix,
                               featureActivator: FeatureActivator,
                               activateFeatures: Boolean) {
         println("running experiment: $id")
@@ -100,7 +100,7 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
                 ))
     }
 
-    private fun calculateError(layer: AutoEncoder, xs: DoubleMatrix): Double  {
+    private fun calculateError(layer: AutoEncoder, xs: FloatMatrix): Double  {
         println("calculating error")
         var errorSum = 0.0
         val rowsToCheck = 10_000
@@ -116,7 +116,7 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
         return error
     }
 
-    private fun logGenerations(id: String, layer: AutoEncoder, xs: DoubleMatrix) {
+    private fun logGenerations(id: String, layer: AutoEncoder, xs: FloatMatrix) {
         println("logging random generations")
 
         val file = File("/tmp/experiment/${id}_generation.log")

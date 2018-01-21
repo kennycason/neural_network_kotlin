@@ -7,7 +7,7 @@ class MNISTImageLoaderTest {
 
     @Test
     fun loadIdx3() {
-        val totalDataSet = MNISTImageLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte").div(255.0)
+        val totalDataSet = MNISTImageLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte")
 
         println("loaded ${totalDataSet.rows} samples")
         (0 until 50).forEach { i ->
@@ -17,7 +17,7 @@ class MNISTImageLoaderTest {
 
     @Test
     fun saveIdx3AsImage() {
-        val totalDataSet = MNISTImageLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte").div(255.0)
+        val totalDataSet = MNISTImageLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte")
         val grayScaleImageDecoder = MatrixGrayScaleImageDecoder(rows = 28)
 
         println("loaded ${totalDataSet.rows} samples")

@@ -1,30 +1,29 @@
 package com.kennycason.nn
 
 import com.kennycason.nn.math.Functions
-import org.jblas.DoubleMatrix
-
+import org.jblas.FloatMatrix
 
 class AutoEncoder(visibleSize: Int,
                   hiddenSize: Int,
-                  private val learningRate: Double = 0.1,
+                  private val learningRate: Float = 0.1f,
                   private val log: Boolean = true) {
 
-    val encode: DoubleMatrix    // weight matrix that learns one level of encoding
-    val decode: DoubleMatrix    // weight matrix that learns one level of decoding
+    val encode: FloatMatrix    // weight matrix that learns one level of encoding
+    val decode: FloatMatrix    // weight matrix that learns one level of decoding
 
     init {
         if (visibleSize * hiddenSize <= 0) { // also checks for integer overflow
             throw RuntimeException("rows x columns exceeds integer size [$visibleSize x $hiddenSize = ${visibleSize * hiddenSize}]")
         }
         // each row maps to a single neuron (note for matrix math orientation)
-        encode = DoubleMatrix.rand(visibleSize, hiddenSize).mul(2.0).sub(1.0) // scale values between -1 and 1
-        decode = DoubleMatrix.rand(hiddenSize, visibleSize).mul(2.0).sub(1.0) // scale values between -1 and 1
+        encode = FloatMatrix.rand(visibleSize, hiddenSize).mul(2.0f).sub(1.0f) // scale values between -1 and 1
+        decode = FloatMatrix.rand(hiddenSize, visibleSize).mul(2.0f).sub(1.0f) // scale values between -1 and 1
 
         println("encode layer $visibleSize x $hiddenSize")
         println("decode layer $hiddenSize x $visibleSize")
     }
 
-    fun learn(x: DoubleMatrix, steps: Int = 10) {
+    fun learn(x: FloatMatrix, steps: Int = 10) {
 
         (1.. steps).forEach {
             // feed-forward
@@ -55,18 +54,18 @@ class AutoEncoder(visibleSize: Int,
 
             if (log) {
                 val errors = x.sub(y)
-                println(Math.sqrt(errors.mul(errors).sum()))
+                println(Math.sqrt(errors.mul(errors).sum().toDouble()))
             }
         }
     }
 
     // only feed-forward to hidden (encoded) layer, return encoded feature
-    fun encode(x: DoubleMatrix) = x.mmul(encode).applyi(Functions.sigmoid)
+    fun encode(x: FloatMatrix) = x.mmul(encode).applyi(Functions.sigmoid)
 
     // given an encoded feature, feed-forward through decoding weights to generate data
-    fun decode(feature: DoubleMatrix) = feature.mmul(decode).applyi(Functions.sigmoid)
+    fun decode(feature: FloatMatrix) = feature.mmul(decode).applyi(Functions.sigmoid)
 
     // full forward propagation
-    fun feedForward(x: DoubleMatrix) = decode(encode(x))
+    fun feedForward(x: FloatMatrix) = decode(encode(x))
 
 }

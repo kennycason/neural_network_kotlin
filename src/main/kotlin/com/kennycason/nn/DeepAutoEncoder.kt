@@ -1,9 +1,10 @@
 package com.kennycason.nn
 
-import org.jblas.DoubleMatrix
+import com.kennycason.nn.math.Errors
+import org.jblas.FloatMatrix
 
 class DeepAutoEncoder(layerDimensions: Array<Array<Int>>,
-                      learningRate: Double = 0.1,
+                      learningRate: Float = 0.1f,
                       private val log: Boolean = false) {
 
     private val layers: Array<AutoEncoder> = Array(
@@ -16,22 +17,36 @@ class DeepAutoEncoder(layerDimensions: Array<Array<Int>>,
                         log = log)
             })
 
-    fun learn(x: DoubleMatrix, steps: Int = 1000) {
-        var currentFeature = x
-
+    fun learn(xs: Collection<FloatMatrix>, steps: Int = 1000) {
+        var currentFeatures = xs
         layers.forEachIndexed { i, layer ->
             if (log) {
                 println("training layer: ${i + 1}")
             }
 
-            layer.learn(currentFeature, steps)
+            (0.. steps).forEach { j ->
+                // train each sample once
+                currentFeatures.forEach { x ->
+                    layer.learn(x, 1)
+                }
 
-            // feed forward to hidden nodes, use hidden as input to next layer
-            currentFeature = layer.encode(currentFeature)
+                // report error
+                if (j % 10 == 0) {
+                    val error = currentFeatures
+                            .map { x -> Errors.compute(x, layer.feedForward(x)) }
+                            .sum() / currentFeatures.size
+                    println("$j -> error: $error")
+                }
+            }
+
+            // generate encoded features to pass on to next layer
+            currentFeatures = currentFeatures
+                    .map { x -> layer.encode(x) }
+                    .toList()
         }
     }
 
-    fun encode(x: DoubleMatrix): DoubleMatrix {
+    fun encode(x: FloatMatrix): FloatMatrix {
         var currentFeature = x
         // feed forward use hidden as input to next layer
         for (i in (0 until layers.size)) {
@@ -40,7 +55,7 @@ class DeepAutoEncoder(layerDimensions: Array<Array<Int>>,
         return currentFeature
     }
 
-    fun decode(feature: DoubleMatrix): DoubleMatrix {
+    fun decode(feature: FloatMatrix): FloatMatrix {
         var currentFeature = feature
         // feed forward use hidden as input to next layer
 
@@ -50,6 +65,6 @@ class DeepAutoEncoder(layerDimensions: Array<Array<Int>>,
         return currentFeature
     }
 
-    fun feedForward(x: DoubleMatrix) = decode(encode(x))
+    fun feedForward(x: FloatMatrix) = decode(encode(x))
 
 }

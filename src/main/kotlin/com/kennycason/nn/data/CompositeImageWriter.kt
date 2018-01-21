@@ -1,6 +1,6 @@
 package com.kennycason.nn.data
 
-import org.jblas.DoubleMatrix
+import org.jblas.FloatMatrix
 import java.awt.image.BufferedImage
 
 /**
@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage
  */
 object CompositeImageWriter {
 
-    fun write(data: DoubleMatrix,
+    fun write(data: FloatMatrix,
               matrixImageDecoder: MatrixImageDecoder,
               rows: Int,
               cols: Int): Image {

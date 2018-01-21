@@ -2,7 +2,7 @@ package com.kennycason.nn.data
 
 import com.kennycason.nn.array2d
 import org.apache.commons.io.IOUtils
-import org.jblas.DoubleMatrix
+import org.jblas.FloatMatrix
 import java.io.IOException
 import java.nio.ByteBuffer
 import kotlin.experimental.and
@@ -22,7 +22,7 @@ object MNISTImageLoader {
 
         Pixels are organized row-wise. Pixel values are 0 to 255. 0 means background (white), 255 means foreground (black).
      */
-    fun loadIdx3(file: String): DoubleMatrix {
+    fun loadIdx3(file: String): FloatMatrix {
         val byteBuffer = ByteBuffer.wrap(IOUtils.toByteArray(MNISTImageLoader::class.java.getResourceAsStream(file)))
         val magicNumber = byteBuffer.int // 2051
         val numberImages = byteBuffer.int
@@ -31,18 +31,18 @@ object MNISTImageLoader {
 
         println("rows: $numberRows x $numberCols")
 
-        val data = DoubleMatrix(numberImages, numberRows * numberCols)
+        val data = FloatMatrix(numberImages, numberRows * numberCols)
         for (i in 0 until numberImages) {
             data.putRow(i, readImage(byteBuffer, numberRows, numberCols))
         }
-        return data
+        return data.divi(255.0f)
     }
 
-    private fun readImage(byteBuffer: ByteBuffer, numberRows: Int, numberCols: Int): DoubleMatrix {
-        val data = DoubleMatrix(1, numberRows * numberCols)
+    private fun readImage(byteBuffer: ByteBuffer, numberRows: Int, numberCols: Int): FloatMatrix {
+        val data = FloatMatrix(1, numberRows * numberCols)
         for (i in 0 until numberRows) {
             for (j in 0 until numberCols) {
-                data.put(i * numberCols + j, (byteBuffer.get().toInt() and 0xFF).toDouble())
+                data.put(i * numberCols + j, (byteBuffer.get().toInt() and 0xFF).toFloat())
             }
         }
         return data

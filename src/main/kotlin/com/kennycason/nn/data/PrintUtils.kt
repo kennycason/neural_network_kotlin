@@ -3,7 +3,7 @@ package com.kennycason.nn.data
 
 object PrintUtils {
 
-    fun toPixelBox(arrays: Array<DoubleArray>, threshold: Double): String {
+    fun toPixelBox(arrays: Array<FloatArray>, threshold: Double): String {
         val stringBuilder = StringBuilder()
         for (array in arrays) {
             for (i in array.indices) {
@@ -18,9 +18,9 @@ object PrintUtils {
         return stringBuilder.toString()
     }
 
-    fun toPixelBox(array: DoubleArray, columnSize: Int, threshold: Double): String {
+    fun toPixelBox(array: FloatArray, columnSize: Int, threshold: Double): String {
         val rowSize = array.size / columnSize
-        val matrix = Array(rowSize) { DoubleArray(columnSize) }
+        val matrix = Array(rowSize) { FloatArray(columnSize) }
         for (i in 0 until rowSize) {
             for (j in 0 until columnSize) {
                 matrix[i][j] = array[i * columnSize + j]

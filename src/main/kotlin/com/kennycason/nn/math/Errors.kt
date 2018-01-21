@@ -1,11 +1,11 @@
 package com.kennycason.nn.math
 
-import org.jblas.DoubleMatrix
+import org.jblas.FloatMatrix
 
 
 object Errors {
-    fun compute(e: DoubleMatrix, a: DoubleMatrix): Double {
+    fun compute(e: FloatMatrix, a: FloatMatrix): Double {
         val errors = e.sub(a)
-        return Math.sqrt(errors.mul(e.sub(a)).sum())
+        return Math.sqrt(errors.mul(e.sub(a)).sum().toDouble())
     }
 }

@@ -1,11 +1,11 @@
 package com.kennycason.nn.data
 
-import org.jblas.DoubleMatrix
+import org.jblas.FloatMatrix
 import java.awt.image.BufferedImage
 
 class MatrixRGBImageDecoder(rows: Int) : MatrixImageDecoder(rows) {
 
-    override fun decode(data: DoubleMatrix): Image {
+    override fun decode(data: FloatMatrix): Image {
         val cols = data.columns / 3 / rows
         val bi = BufferedImage(cols, rows, BufferedImage.TYPE_INT_RGB)
         var y = 0
@@ -18,12 +18,12 @@ class MatrixRGBImageDecoder(rows: Int) : MatrixImageDecoder(rows) {
         return Image(bi)
     }
 
-    private fun read(data: DoubleMatrix, bi: BufferedImage, x: Int, y: Int) {
+    private fun read(data: FloatMatrix, bi: BufferedImage, x: Int, y: Int) {
         val cols = data.columns / 3 / rows
         val offset = x * 3
-        val r = (data.get(0, offset) * 255.0).toInt()
-        val g = (data.get(0, offset + 1) * 255.0).toInt()
-        val b = (data.get(0, offset + 2) * 255.0).toInt()
+        val r = (data.get(0, offset) * 255.0f).toInt()
+        val g = (data.get(0, offset + 1) * 255.0f).toInt()
+        val b = (data.get(0, offset + 2) * 255.0f).toInt()
         val rgb = (r shl 16) + (g shl 8) + b
         bi.setRGB(x % cols, y, rgb)
 

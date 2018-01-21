@@ -2,7 +2,7 @@ package com.kennycason.nn
 
 import com.kennycason.nn.data.*
 import com.kennycason.nn.math.Errors
-import org.jblas.DoubleMatrix
+import org.jblas.FloatMatrix
 import org.junit.Test
 
 
@@ -10,9 +10,9 @@ class AutoEncoderTest {
 
     @Test
     fun randomVector() {
-        val x = DoubleMatrix.rand(1, 10)
+        val x = FloatMatrix.rand(1, 10)
 
-        val layer = AutoEncoder(learningRate = 0.1, visibleSize = 10, hiddenSize = 5, log = true)
+        val layer = AutoEncoder(learningRate = 0.1f, visibleSize = 10, hiddenSize = 5, log = true)
         layer.learn(x, steps = 1000)
 
         println("input: " + x.toString("%f", "[", "]", ", ", "\n"))
@@ -22,30 +22,32 @@ class AutoEncoderTest {
 
     @Test
     fun multipleVector() {
-        val vectorSize = 10
+        val vectorSize = 1000
         val xs =  listOf(
-                DoubleMatrix.rand(1, vectorSize),
-                DoubleMatrix.rand(1, vectorSize),
-                DoubleMatrix.rand(1, vectorSize),
-                DoubleMatrix.rand(1, vectorSize),
-                DoubleMatrix.rand(1, vectorSize),
-                DoubleMatrix.rand(1, vectorSize)
+                FloatMatrix.rand(1, vectorSize),
+                FloatMatrix.rand(1, vectorSize),
+                FloatMatrix.rand(1, vectorSize),
+                FloatMatrix.rand(1, vectorSize),
+                FloatMatrix.rand(1, vectorSize),
+                FloatMatrix.rand(1, vectorSize)
         )
 
         val layer = AutoEncoder(
-                learningRate = 0.1,
+                learningRate = 0.1f,
                 visibleSize = vectorSize,
                 hiddenSize = vectorSize / 2,
                 log = false)
 
         val start = System.currentTimeMillis()
-        (0.. 100000).forEach { i ->
+        (0.. 10_000).forEach { i ->
             xs.forEach { x ->
                 layer.learn(x, 1)
             }
 
-            val error = Errors.compute(xs[0], layer.feedForward(xs[0]))
             if (i % 10 == 0) {
+                val error = xs
+                        .map { x -> Errors.compute(x, layer.feedForward(x)) }
+                        .sum() / xs.size
                 println("$i -> error: $error")
             }
         }
@@ -63,15 +65,19 @@ class AutoEncoderTest {
     }
 
     @Test
-    fun imageJet() {
+    fun imageNinja() {
         val image = Image("/data/ninja.png")
-        val imageData = MatrixRGBImageEncoder().encode(image)
+        val imageData = MatrixGrayScaleImageEncoder().encode(image)
 
         val height = image.height()
         val width = image.width()
         println("$height x $width")
 
-        val layer = AutoEncoder(learningRate = 0.9, visibleSize = imageData.columns, hiddenSize = imageData.columns / 2)
+        val layer = AutoEncoder(
+                learningRate = 0.01f,
+                visibleSize = imageData.columns,
+                hiddenSize = (imageData.columns * 0.75).toInt()
+        )
 
         val start = System.currentTimeMillis()
         (0.. 1000).forEach {
@@ -79,8 +85,8 @@ class AutoEncoderTest {
             println("${System.currentTimeMillis() - start}ms")
 
             val visual = layer.feedForward(imageData)
-            val outImage = MatrixRGBImageDecoder(rows = height).decode(visual)
-            outImage.save("/tmp/output3.png")
+            val outImage = MatrixGrayScaleImageDecoder(rows = height).decode(visual)
+            outImage.save("/tmp/output_ninja2.png")
         }
     }
 
@@ -93,7 +99,10 @@ class AutoEncoderTest {
         val width = image.width()
         println("$height x $width")
 
-        val layer = AutoEncoder(learningRate = 0.1, visibleSize = imageData.columns, hiddenSize = imageData.columns / 2)
+        val layer = AutoEncoder(
+                learningRate = 0.1f,
+                visibleSize = imageData.columns,
+                hiddenSize = imageData.columns / 2)
 
         val start = System.currentTimeMillis()
         var i = 0

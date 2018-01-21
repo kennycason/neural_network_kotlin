@@ -1,6 +1,6 @@
 package com.kennycason.nn.data
 
-import org.jblas.DoubleMatrix
+import org.jblas.FloatMatrix
 import java.awt.image.BufferedImage
 
 class MatrixNBitImageDecoder(private val bits: Int = 24,
@@ -11,7 +11,7 @@ class MatrixNBitImageDecoder(private val bits: Int = 24,
 
     private val HIGH_BIT_FLAG = 8388608
 
-    override fun decode(data: DoubleMatrix): Image {
+    override fun decode(data: FloatMatrix): Image {
         val cols = data.columns / bits / rows
         val bi = BufferedImage(cols, rows, BufferedImage.TYPE_INT_RGB)
         var y = 0
@@ -24,7 +24,7 @@ class MatrixNBitImageDecoder(private val bits: Int = 24,
         return Image(bi)
     }
 
-    private fun read(data: DoubleMatrix, bi: BufferedImage, x: Int, y: Int) {
+    private fun read(data: FloatMatrix, bi: BufferedImage, x: Int, y: Int) {
         val cols = data.columns / bits / rows
         var rgb = 0
         var offset = 0

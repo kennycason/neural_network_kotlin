@@ -7,22 +7,22 @@ class HebbianTest {
 
     @Test fun basic() {
         val xs = arrayOf(
-                doubleArrayOf(1.0, 1.0, 1.0),
-                doubleArrayOf(1.0, 1.0, 0.0),
-                doubleArrayOf(1.0, 1.0, 0.0),
-                doubleArrayOf(1.0, 0.0, 0.0),
-                doubleArrayOf(1.0, 0.0, 0.0),
-                doubleArrayOf(1.0, 0.0, 0.0)
+                floatArrayOf(1.0f, 1.0f, 1.0f),
+                floatArrayOf(1.0f, 1.0f, 0.0f),
+                floatArrayOf(1.0f, 1.0f, 0.0f),
+                floatArrayOf(1.0f, 0.0f, 0.0f),
+                floatArrayOf(1.0f, 0.0f, 0.0f),
+                floatArrayOf(1.0f, 0.0f, 0.0f)
         )
 
         val hebbian = Hebbian(3)
         hebbian.learn(xs)
         println("learned weights: " + hebbian.weights.joinToString(", "))
 
-        println(hebbian.evaluate(doubleArrayOf(1.0, 1.0, 1.0)))
-        println(hebbian.evaluate(doubleArrayOf(1.0, 1.0, 0.0)))
-        println(hebbian.evaluate(doubleArrayOf(1.0, 0.0, 1.0)))
-        println(hebbian.evaluate(doubleArrayOf(0.0, 0.0, 1.0)))
+        println(hebbian.evaluate(floatArrayOf(1.0f, 1.0f, 1.0f)))
+        println(hebbian.evaluate(floatArrayOf(1.0f, 1.0f, 0.0f)))
+        println(hebbian.evaluate(floatArrayOf(1.0f, 0.0f, 1.0f)))
+        println(hebbian.evaluate(floatArrayOf(0.0f, 0.0f, 1.0f)))
     }
 
 }

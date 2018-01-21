@@ -29,6 +29,13 @@ Sample generated ouptut: (click [here](https://raw.githubusercontent.com/kennyca
 ![MNIST Error Graph](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_error_graph.png)
 
 
+# Random Vectors
+
+Below are a few error graphs of a single layer Auto Encoder learing random vectors.
+
+![100d Random Vector Error Graph](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/100d_random_vector_auto_encoder_error_graph.png)
+
+![1000d Random Vector Error Graph](https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/1000d_random_vector_auto_encoder_error_graph.png)
 
 
 # Notes

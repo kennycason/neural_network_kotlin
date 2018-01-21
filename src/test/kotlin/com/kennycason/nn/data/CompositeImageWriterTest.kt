@@ -7,7 +7,7 @@ class CompositeImageWriterTest {
 
     @Test
     fun mnist() {
-        val totalDataSet = MNISTImageLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte").div(255.0)
+        val totalDataSet = MNISTImageLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte")
         val grayScaleImageDecoder = MatrixGrayScaleImageDecoder(rows = 28)
 
         // 60,000 images ~ 245x245

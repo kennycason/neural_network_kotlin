@@ -2,7 +2,7 @@ package com.kennycason.nn.optimization
 
 import com.kennycason.nn.AutoEncoder
 import com.kennycason.nn.math.Errors
-import org.jblas.DoubleMatrix
+import org.jblas.FloatMatrix
 import org.junit.Test
 
 /**
@@ -14,16 +14,16 @@ class FeatureActivatorAutoEncoderTest {
     fun multipleVector() {
         val vectorSize = 1000
         val xs =  listOf(
-                DoubleMatrix.rand(1, vectorSize),
-                DoubleMatrix.rand(1, vectorSize),
-                DoubleMatrix.rand(1, vectorSize),
-                DoubleMatrix.rand(1, vectorSize),
-                DoubleMatrix.rand(1, vectorSize),
-                DoubleMatrix.rand(1, vectorSize)
+                FloatMatrix.rand(1, vectorSize),
+                FloatMatrix.rand(1, vectorSize),
+                FloatMatrix.rand(1, vectorSize),
+                FloatMatrix.rand(1, vectorSize),
+                FloatMatrix.rand(1, vectorSize),
+                FloatMatrix.rand(1, vectorSize)
         )
 
         val layer = AutoEncoder(
-                learningRate = 0.2,
+                learningRate = 0.2f,
                 visibleSize = vectorSize,
                 hiddenSize = vectorSize / 2,
                 log = false)
