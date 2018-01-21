@@ -8,4 +8,3 @@ Neural Networks in Kotlin
 
 
 Autoencoders trained via Stochastic Gradient Descent (actually more like mini-batch size = 1)
-

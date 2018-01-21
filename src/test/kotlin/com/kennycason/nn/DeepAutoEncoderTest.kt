@@ -1,5 +1,6 @@
 package com.kennycason.nn
 
+import com.kennycason.nn.math.Errors
 import org.jblas.DoubleMatrix
 import org.junit.Test
 

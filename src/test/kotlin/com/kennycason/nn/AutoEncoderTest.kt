@@ -1,6 +1,7 @@
 package com.kennycason.nn
 
 import com.kennycason.nn.data.*
+import com.kennycason.nn.math.Errors
 import org.jblas.DoubleMatrix
 import org.junit.Test
 
@@ -21,7 +22,7 @@ class AutoEncoderTest {
 
     @Test
     fun multipleVector() {
-        val vectorSize = 1000
+        val vectorSize = 10
         val xs =  listOf(
                 DoubleMatrix.rand(1, vectorSize),
                 DoubleMatrix.rand(1, vectorSize),
@@ -32,13 +33,13 @@ class AutoEncoderTest {
         )
 
         val layer = AutoEncoder(
-                learningRate = 0.2,
+                learningRate = 0.1,
                 visibleSize = vectorSize,
                 hiddenSize = vectorSize / 2,
                 log = false)
 
         val start = System.currentTimeMillis()
-        (0.. 10000).forEach { i ->
+        (0.. 100000).forEach { i ->
             xs.forEach { x ->
                 layer.learn(x, 1)
             }
@@ -95,14 +96,14 @@ class AutoEncoderTest {
         val layer = AutoEncoder(learningRate = 0.1, visibleSize = imageData.columns, hiddenSize = imageData.columns / 2)
 
         val start = System.currentTimeMillis()
-        (0.. 10000).forEach {
+        var i = 0
+        (0.. 100).forEach {
             layer.learn(imageData, 10)
             println("${System.currentTimeMillis() - start}ms")
 
             val visual = layer.feedForward(imageData)
             val outImage = MatrixRGBImageDecoder(rows = height).decode(visual)
-            outImage.save("/tmp/output.png")
-            Thread.sleep(2000)
+            outImage.save("/tmp/output${i++}.png")
         }
     }
 

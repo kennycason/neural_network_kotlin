@@ -1,5 +1,6 @@
 package com.kennycason.nn
 
+import com.kennycason.nn.math.Functions
 import org.jblas.DoubleMatrix
 
 
@@ -47,7 +48,7 @@ class AutoEncoder(visibleSize: Int,
                     .mmul(yErrors.transpose())
                     .transpose()    // two transposes on smaller matrices (yErrors / features errors is cheaper than performing on large decode matrix
                     .mul(feature.apply(Functions.sigmoidDerivative)) // error delta * derivative of activation function (sigmoid factored out)
-                  //  .mul(learningRate)
+                  //  .mul(activationRate)
 
             val encodeGradients = x.transpose().mmul(featureErrors)
             encode.add(encodeGradients) // update weights
