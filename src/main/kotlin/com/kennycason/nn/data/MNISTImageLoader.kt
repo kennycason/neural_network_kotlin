@@ -8,7 +8,7 @@ import java.nio.ByteBuffer
 import kotlin.experimental.and
 
 
-class MNISTImageLoader {
+object MNISTImageLoader {
     /*
         [offset] [type]          [value]          [description]
         0000     32 bit integer  0x00000803(2051) magic number

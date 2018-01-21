@@ -16,8 +16,7 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
 
     @Test
     fun mnistDataSet() {
-        val mnistImageLoader = MNISTImageLoader()
-        val xs = mnistImageLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte").div(255.0)
+        val xs = MNISTImageLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte").div(255.0)
 
         val visibleSize = 28 * 28
         val hiddenSize = (visibleSize * 0.75).toInt()

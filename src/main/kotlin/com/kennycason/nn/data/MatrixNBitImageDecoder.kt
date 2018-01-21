@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 
 class MatrixNBitImageDecoder(private val bits: Int = 24,
                              private val threshold: Double = 0.5,
-                             private val rows: Int) : MatrixImageDecoder {
+                             rows: Int) : MatrixImageDecoder(rows) {
 
     private val RGB_BITS = 24
 

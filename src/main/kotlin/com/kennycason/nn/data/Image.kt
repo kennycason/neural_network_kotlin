@@ -14,7 +14,18 @@ class Image {
 
     constructor(file: String) {
         println("file: " + file)
-        bi = ImageIO.read(Image::class.java.getResourceAsStream(file))
+        val resource = Image::class.java.getResourceAsStream(file)
+        if (resource != null) {
+            bi = ImageIO.read(resource)
+            return
+        }
+
+        val fileResource = File(file)
+        if (fileResource.exists()) {
+            bi = ImageIO.read(fileResource)
+            return
+        }
+        throw RuntimeException("Could not find [$file] in resources or on file system")
     }
 
     constructor(bi: BufferedImage) {

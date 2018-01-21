@@ -3,7 +3,7 @@ package com.kennycason.nn.data
 import org.jblas.DoubleMatrix
 import java.awt.image.BufferedImage
 
-class MatrixRGBImageDecoder(private val rows: Int) : MatrixImageDecoder {
+class MatrixRGBImageDecoder(rows: Int) : MatrixImageDecoder(rows) {
 
     override fun decode(data: DoubleMatrix): Image {
         val cols = data.columns / 3 / rows

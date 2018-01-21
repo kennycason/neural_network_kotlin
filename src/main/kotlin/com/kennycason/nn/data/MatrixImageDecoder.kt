@@ -3,6 +3,6 @@ package com.kennycason.nn.data
 import org.jblas.DoubleMatrix
 
 
-interface MatrixImageDecoder {
-    fun decode(data: DoubleMatrix): Image
+abstract class MatrixImageDecoder(val rows: Int) {
+    abstract fun decode(data: DoubleMatrix): Image
 }
