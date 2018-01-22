@@ -8,7 +8,7 @@ This project is my Neural Network playground in Kotlin. I'll be porting all my m
 - Autoencoder
 - Stacked (Deep) Autoencoder
 - Feature Clustering via Autoencoder
-- Hebbian Learning
+- Convolution (Coming within 1-2 days)
 
 
 # Training Algorithms
