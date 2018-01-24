@@ -62,9 +62,22 @@ Below are a few error graphs of a single layer autoencoder learing random vector
 
 # Feature Clustering
 
-A byproduct of an autoencoder learning to encode features, is that through the encoding/compression process, feature clustering also occurs. Below is a sample of a deep autoencoder learning to encode feature vectors representing republican and democrats voting history. The deepest most layer maps to a small 2-dimensional feature vector so that we can easily visualize the encoding on a x-y plot. There is a clear trend showing democratic votes clustered to the top, and republican to the bottom. Unsurprisingly, there is also some overlap demonstrating cases where democrats and republicans share overlapping votes.
+A byproduct of an autoencoder learning to encode features, is that through the encoding/compression process, feature clustering also occurs.
+
+Below are examples of a deep autoencoder learning to encode input vectors.
+The deepest most layer maps to a small 2-dimensional feature vector so that we can easily visualize the encoding on a x-y plot.
+
+#### Republican and Democrat Voting History Clustering
+
+The deepest most layer maps to a small 2-dimensional feature vector so that we can easily visualize the encoding on a x-y plot.
+There is a clear trend showing democratic votes clustered to the top right, and republican to the bottom left.
+Unsurprisingly, there is also some overlap demonstrating cases where democrats and republicans share overlapping votes.
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_auto_encoder_voter_feature_clustering.png" width="450px"/>
+
+#### Non-Coding RNA Gene Clustering
+
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/cod_rna_feature_clustering.png" width="450px"/>
 
 # Notes
 

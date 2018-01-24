@@ -16,11 +16,11 @@ object BinaryClassDataLoader {
         lines.forEachIndexed { i, row ->
             val columns = row.split(" ")
             val x = FloatMatrix(1, featureDimensions)
-            (0 until featureDimensions).forEach { j ->
-                x.put(j, columns[j].toFloat())
+            (0 until  featureDimensions).forEach { j ->
+                x.put(j, columns[j + 1].toFloat())
             }
             xs.putRow(i, x)
-            ys.set(i, columns[featureDimensions])
+            ys.set(i, columns[0])
         }
         return LabeledData(xs, ys)
     }
