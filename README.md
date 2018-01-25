@@ -98,7 +98,9 @@ Learning of a single small image.
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_jet.gif" width="300px"/>
 
-Learning a batch of Pokemon Images. This may just be an illusion, but I find it interesting that the network appears to be learning the shape and structure before color.
+Learning a batch of Pokemon Images. 
+This may just be an illusion, but I find it interesting that the network appears to be learning the shape and structure before color. 
+Note, I'm using a small network and a low number of training cycles. With more training this image will become more clear.
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon.png" /> <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon.gif" />
 
