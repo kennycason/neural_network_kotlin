@@ -1,6 +1,6 @@
 package com.kennycason.nn
 
-import com.kennycason.nn.data.*
+import com.kennycason.nn.data.image.*
 import com.kennycason.nn.math.Errors
 import org.jblas.FloatMatrix
 import org.junit.Test

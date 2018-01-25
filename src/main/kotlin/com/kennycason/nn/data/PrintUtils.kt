@@ -18,12 +18,12 @@ object PrintUtils {
         return stringBuilder.toString()
     }
 
-    fun toPixelBox(array: FloatArray, columnSize: Int, threshold: Double): String {
-        val rowSize = array.size / columnSize
-        val matrix = Array(rowSize) { FloatArray(columnSize) }
-        for (i in 0 until rowSize) {
-            for (j in 0 until columnSize) {
-                matrix[i][j] = array[i * columnSize + j]
+    fun toPixelBox(array: FloatArray, columns: Int, threshold: Double): String {
+        val rows = array.size / columns
+        val matrix = Array(rows) { FloatArray(columns) }
+        for (col in 0 until columns) {
+            for (row in 0 until rows) {
+                matrix[row][col] = array[col * columns + row]
             }
         }
         return toPixelBox(matrix, threshold)

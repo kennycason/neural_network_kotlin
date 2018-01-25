@@ -7,15 +7,14 @@ This project is my Neural Network playground in Kotlin. I'll be porting all my m
 
 - Autoencoder
 - Stacked (Deep) Autoencoder
+- Stacked (Deep) Convolution Autoencoder
 - Feature Clustering via Autoencoder
-- Convolution (Coming within 1-2 days)
 
 
 # Training Algorithms
 
 - Stochastic Gradient Descent
 - Mini-batch size = 1
-
 
 
 # MNIST Training Results
@@ -78,6 +77,37 @@ Unsurprisingly, there is also some overlap demonstrating cases where democrats a
 ### Non-Coding RNA Gene Clustering
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/cod_rna_feature_clustering.png" width="450px"/>
+
+
+### Deep Convolutional Autoencoder
+
+Vanila Autoencoders work great for low dimensional data.
+However, high dimensional data, such as images require a few tricks to effectively train.
+By using a single autoencoder with a single fully-connected encode/decode weight matrix, we are effectively saying that every single pixel is directly correlated to every other pixel.
+While this may be true, the relation of pixels of opposite corners, or large distances apart in an image are likely more *abstractly* related.
+Asking a neural network to encode that many correlations in a single layer is a very steep request.
+You may also discover that the weight matrices are too large to fit in memory, or too costly to compute.
+A solution to this is to break each layer into pieces and train smaller networks on subsections of the image.
+The separate networks are then connected together in subsequent layers.
+This allows the network to learn simpler features first before combining in other layers to form more abstract features.
+The idea is that pixels closer to each other are likely more immediately related to each other.
+Additionally, it helps that this also results in smaller matrices which means faster computation and potential parellization.
+Note that extra work was done to ensure spatial relations when processing 2d data is preserved when splitting/merging data between convolution layers.
+
+Learning of a single small image.
+
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_jet.gif" width="300px"/>
+
+Learning a batch of Pokemon Images. This may just be an illusion, but generated_pokemon_8193.pngI find it interesting that the network appears to be learning the shape and structure before color.
+
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_convoluted_auto_encoder_pokemon.png" />
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_convoluted_auto_encoder_pokemon.gif" />
+
+Learning a batch of Pokemon Images with only a single layer of convolution. Note the error in detail
+
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/convoluted_auto_encoder_single_layer_pokemon.png" />
+
+
 
 # Notes
 

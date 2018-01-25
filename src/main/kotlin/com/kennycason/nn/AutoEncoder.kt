@@ -1,13 +1,16 @@
 package com.kennycason.nn
 
+import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
+import java.util.*
 
 class AutoEncoder(visibleSize: Int,
                   hiddenSize: Int,
                   private val learningRate: Float = 0.1f,
                   private val log: Boolean = true) {
 
+    private val random = Random()
     val encode: FloatMatrix    // weight matrix that learns one level of encoding
     val decode: FloatMatrix    // weight matrix that learns one level of decoding
 
@@ -19,13 +22,29 @@ class AutoEncoder(visibleSize: Int,
         encode = FloatMatrix.rand(visibleSize, hiddenSize).mul(2.0f).sub(1.0f) // scale values between -1 and 1
         decode = FloatMatrix.rand(hiddenSize, visibleSize).mul(2.0f).sub(1.0f) // scale values between -1 and 1
 
-        println("encode layer $visibleSize x $hiddenSize")
-        println("decode layer $hiddenSize x $visibleSize")
+        if (log) {
+            println("encode layer $visibleSize x $hiddenSize, decode layer $hiddenSize x $visibleSize")
+        }
+    }
+
+    fun learn(xs: List<FloatMatrix>, steps: Int = 1000) {
+        var currentFeatures = xs
+
+        (0.. steps).forEach { i ->
+            // sgd
+            val x = currentFeatures[random.nextInt(currentFeatures.size)]
+            learn(x, 1)
+
+            // report error for current training data TODO report rolling avg error
+            if (i % 100 == 0 && log) {
+                val error = Errors.compute(x, feedForward(x))
+                println("$i -> error: $error")
+            }
+        }
     }
 
     fun learn(x: FloatMatrix, steps: Int = 10) {
-
-        (1.. steps).forEach {
+        (1.. steps).forEach { i ->
             // feed-forward
             val feature = encode(x)
             val y = decode(feature)
@@ -53,8 +72,9 @@ class AutoEncoder(visibleSize: Int,
             encode.add(encodeGradients) // update weights
 
             if (log) {
-                val errors = x.sub(y)
-                println(Math.sqrt(errors.mul(errors).sum().toDouble()))
+                val error = Errors.compute(x, y)
+                println("$i -> error: $error")
+
             }
         }
     }

@@ -2,7 +2,7 @@ package com.kennycason.nn.optimization
 
 import com.kennycason.nn.AutoEncoder
 import com.kennycason.nn.math.Errors
-import com.kennycason.nn.data.MNISTImageLoader
+import com.kennycason.nn.data.image.MNISTImageLoader
 import com.kennycason.nn.data.PrintUtils
 import org.jblas.FloatMatrix
 import org.junit.Test
@@ -56,7 +56,7 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
 
     private fun runExperiment(id: String,
                               layer: AutoEncoder,
-                              xs: FloatMatrix,
+                              xs: List<FloatMatrix>,
                               featureActivator: FeatureActivator,
                               activateFeatures: Boolean) {
         println("running experiment: $id")
@@ -66,7 +66,7 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
         val inactiveFeatures = mutableListOf<Int>()
         val start = System.currentTimeMillis()
         (0.. 100_000).forEach { i ->
-            val x = xs.getRow(random.nextInt(xs.rows))
+            val x = xs.get(random.nextInt(xs.size))
             layer.learn(x, 1)
 
             featureActivator.sample(x)
@@ -100,12 +100,12 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
                 ))
     }
 
-    private fun calculateError(layer: AutoEncoder, xs: FloatMatrix): Double  {
+    private fun calculateError(layer: AutoEncoder, xs: List<FloatMatrix>): Double  {
         println("calculating error")
         var errorSum = 0.0
         val rowsToCheck = 10_000
         (0 until rowsToCheck).forEach{ i ->
-            val x = xs.getRow(i)
+            val x = xs.get(i)
             errorSum += Errors.compute(x, layer.feedForward(x))
             if (i % 100 == 0) {
                 println("$i/$rowsToCheck")
@@ -116,14 +116,14 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
         return error
     }
 
-    private fun logGenerations(id: String, layer: AutoEncoder, xs: FloatMatrix) {
+    private fun logGenerations(id: String, layer: AutoEncoder, xs: List<FloatMatrix>) {
         println("logging random generations")
 
         val file = File("/tmp/experiment/${id}_generation.log")
 
         val sb = StringBuilder()
         (0.. 100).forEach { i ->
-            val x = xs.getRow(i)
+            val x = xs.get(i)
 
             val error = Errors.compute(x, layer.feedForward(x))
             sb.append("input:\n" + PrintUtils.toPixelBox(x.toArray(), 28, 0.5) + "\n" +

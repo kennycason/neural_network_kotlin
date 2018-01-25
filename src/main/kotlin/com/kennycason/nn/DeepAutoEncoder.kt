@@ -28,21 +28,12 @@ class DeepAutoEncoder(layerDimensions: Array<Array<Int>>,
             }
 
             (0.. steps).forEach { j ->
-                // train each sample once
-//                currentFeatures.forEach { x ->
-//                    layer.learn(x, 1)
-//                }
-
                 // sgd
                 val x = currentFeatures[random.nextInt(currentFeatures.size)]
                 layer.learn(x, 1)
 
                 // report error for current training data TODO report rolling avg error
                 if (j % 10 == 0 && log) {
-//                    val error = currentFeatures
-//                            .map { x -> Errors.compute(x, layer.feedForward(x)) }
-//                            .sum() / currentFeatures.size
-
                     val error = Errors.compute(x, layer.feedForward(x))
                     println("$j -> error: $error")
                 }
