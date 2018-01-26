@@ -104,9 +104,9 @@ Note, I'm using a small network and a low number of training cycles. With more t
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon.png" /> <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon.gif" />
 
-Learning a batch of Pokemon Images with only a single layer of convolution. Note the error in detail
+Learning all 151 pokemon images. Note that the color model hasn't been fully learned. Also there are some strange clipping/white spots. These are largely due to editing issues with the training image on my part. :)
 
-<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/convoluted_auto_encoder_single_layer_pokemon.png" />
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon_151.png.png" />
 
 
 

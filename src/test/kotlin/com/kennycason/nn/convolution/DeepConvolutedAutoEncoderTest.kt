@@ -95,24 +95,24 @@ class DeepConvolutedAutoEncoderTest {
         val layer2 = ConvolutedLayer(
                 visibleDim = Dim(360, 120),
                 hiddenDim = Dim(180, 120),
-                paritions = Dim(20, 20),
+                paritions = Dim(30, 30),
                 learningRate = 0.1f,
                 log = false
         )
         val layer3 = ConvolutedLayer(
                 visibleDim = Dim(180, 120),
-                hiddenDim = Dim(40, 40),
+                hiddenDim = Dim(120, 60),
                 paritions = Dim(20, 20),
                 learningRate = 0.1f,
                 log = false
         )
-//        val layer4 = ConvolutedLayer(
-//                visibleDim = Dim(120, 80),
-//                hiddenDim = Dim(80, 60),
-//                paritions = Dim(20, 20),
-//                learningRate = 0.1f,
-//                log = false
-//        )
+        val layer4 = ConvolutedLayer(
+                visibleDim = Dim(120, 60),
+                hiddenDim = Dim(60, 30),
+                paritions = Dim(10, 10),
+                learningRate = 0.1f,
+                log = false
+        )
 //        val layer5 = ConvolutedLayer(
 //                visibleDim = Dim(80, 60),
 //                hiddenDim = Dim(40, 40),
@@ -136,14 +136,14 @@ class DeepConvolutedAutoEncoderTest {
 //        )
 
         val layer = DeepConvolutedAutoEncoder(
-                layers = arrayOf(layer1, layer2, layer3/*, layer4, layer5, layer6*/))
+                layers = arrayOf(layer1, layer2, layer3, layer4/*, layer5, layer6*/))
 
         val start = System.currentTimeMillis()
         var j = 1
-        val m = 100
-        val n = 136
-        (0.. 10_000).forEach { i ->
-            layer.learn(xs.subList(m, n), 100)
+        val m = 0
+        val n = 151
+        (0.. 100_000).forEach { i ->
+            layer.learn(xs.subList(m, n), n * 2)
             println("$i -> ${System.currentTimeMillis() - start}ms")
 
             if (i > j) {
@@ -153,10 +153,10 @@ class DeepConvolutedAutoEncoderTest {
                 }
                 val image = CompositeImageWriter.write(
                         data = ys,
-                        rows = 6, // 11,
-                        cols = 6, //15,
+                        rows = 11,
+                        cols = 15,
                         matrixImageDecoder = MatrixRGBImageDecoder(rows = 60))
-                image.save("/tmp/deep_generated_pokemon_$i.png")
+                image.save("/tmp/very_deep_generated_pokemon_$i.png")
                 j += 2
             }
         }
