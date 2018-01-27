@@ -106,8 +106,7 @@ Note, I'm using a small network and a low number of training cycles. With more t
 
 Learning all 151 pokemon images. Note that the color model hasn't been fully learned. Also there are some strange clipping/white spots. These are largely due to editing issues with the training image on my part. :)
 
-<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon_151.png" />
-<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon_151.gif" />
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon_151.png" width="350px" /> <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon_151.gif" width="350px"/>
 
 
 
