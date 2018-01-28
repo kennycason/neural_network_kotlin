@@ -21,17 +21,6 @@ This project is my Neural Network playground in Kotlin. I'll be porting all my m
 # MNIST Training Results
 
 ### Single Layer Autoencoder
-Training Rate: 0.1
-Steps: 100,000
-Algorithm: Stochastic Gradient Descent
-Error: ~3.5 (Squared error of pixel error per image, training data)
-
-<a href="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_100k_steps_generated.png" target="new"><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_100k_steps_generated_subset.png" width="400px"/></a><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_100k_steps_error_graph.png" width="400px"/>
-
-click image to see all 60,000k reconstructions.
-
-
-### Single Layer Autoencoder
 Training Rate: 0.05
 Steps: 1,000,000
 Algorithm: Stochastic Gradient Descent
@@ -39,7 +28,8 @@ Error: ~2.6 (Squared error of pixel error per image, training data)
 
 <a href="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_1m_steps_generated.png" target="new"><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_1m_steps_generated_subset.png" width="400px"/></a><img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_auto_encoder_1m_steps_error_graph.png" width="400px"/>
 
-click image to see all 60,000k reconstructions.
+Click image to see all 60,000k reconstructions.
+(Good results can be seen in far less than 1,000,000 steps.)
 
 ### Deep Autoencoder
 Training Rate: 0.1
@@ -51,7 +41,7 @@ Error: ~5.6 (Squared error of pixel error per image, training data)
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/mnist_deep_autoencoder_250k_steps_generated_subset.png" width="400px"/>
 </a>
 
-click image to see all 60,000k reconstructions.
+Click image to see all 60,000k reconstructions.
 
 # Random Vectors
 
