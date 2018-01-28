@@ -9,6 +9,7 @@ This project is my Neural Network playground in Kotlin. I'll be porting all my m
 - Stacked (Deep) Autoencoder
 - Stacked (Deep) Convolution Autoencoder
 - Feature Clustering via Autoencoder
+- Error Backpropagation Multi-Layer Perceptron
 
 
 # Training Algorithms
@@ -108,7 +109,36 @@ Learning all 151 pokemon images. Note that the color model hasn't been fully lea
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon_151.png" width="400px" /> <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon_151.gif" width="400px"/>
 
+# Error Backpropagation Multi-Layer Perceptron
 
+Included is an implementation of a vanilla Multi-Layer Percepttron trained via Error Backpropagation.
+This network can be used in isolation or chained to the end of an autoencoder (or other network) to learn/interpret features.
+
+### XOR
+
+```
+layer sizes [2, 10, 1]
+trained in 331ms
+[0.000000, 0.000000] -> [0.047964]
+[0.000000, 1.000000] -> [0.959066]
+[1.000000, 0.000000] -> [0.960735]
+[1.000000, 1.000000] -> [0.042386]
+total error: 0.042637016544833546
+```
+
+### Random Vectors
+
+```
+layer sizes [10, 15, 20, 10, 2]
+trained in 870ms
+870ms
+[0.699696, 0.994488, 0.404887, 0.984956, 0.689970, 0.056813, 0.831808, 0.749085, 0.711832, 0.055555] -> [0.118158, 0.492797]
+[0.925863, 0.689105, 0.915446, 0.001710, 0.107525, 0.824539, 0.525365, 0.658552, 0.229297, 0.361060] -> [0.895759, 0.552127]
+[0.166542, 0.318311, 0.867185, 0.985580, 0.103086, 0.939888, 0.457910, 0.758986, 0.485288, 0.241934] -> [0.957250, 0.744716]
+[0.287445, 0.069872, 0.958304, 0.072877, 0.660907, 0.079100, 0.689686, 0.049298, 0.130067, 0.314979] -> [0.699894, 0.362934]
+[0.515721, 0.321559, 0.704876, 0.835021, 0.622173, 0.473566, 0.077452, 0.868374, 0.987843, 0.153353] -> [0.269416, 0.366104]
+total error: 0.012446605931539503
+```
 
 
 # Notes

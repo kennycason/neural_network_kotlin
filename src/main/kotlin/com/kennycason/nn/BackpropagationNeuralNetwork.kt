@@ -2,26 +2,41 @@ package com.kennycason.nn
 
 import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
+import com.sun.org.apache.xalan.internal.utils.FeatureManager
 import org.jblas.FloatMatrix
 import java.util.*
 
 /**
  * An implementation of a multi-layer neural network trained via back-error propagation
  */
-class BackpropagationNeuralNetwork(inputSize: Int,
-                                  // hiddenSize: Int,
-                                   outputSize: Int,
+class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
                                    private val learningRate: Float = 0.1f,
                                    private val log: Boolean = true) {
 
+    private val inputSize: Int
+    private val outputSize: Int
+
+    // layer of weight matrices
+    // each row maps to a single neuron (note for matrix math orientation)
+    private val layerWeights: Array<FloatMatrix>
+
     private val random = Random()
 
-    // each row maps to a single neuron (note for matrix math orientation)
-    val weights = FloatMatrix.rand(inputSize, outputSize).mul(2.0f).sub(1.0f)
-
     init {
+        if (layerSizes.size < 2) {
+            throw IllegalArgumentException("Must at least provide input and output layer sizes")
+        }
+        layerWeights = (0 until layerSizes.size - 1).map { i ->
+            val xSize = layerSizes[i]
+            val ySize = layerSizes[i + 1]
+            FloatMatrix.rand(xSize, ySize).mul(2.0f).sub(1.0f)
+        }.toTypedArray()
+
+        inputSize = layerSizes.first()
+        outputSize = layerSizes.last()
+
         if (log) {
-            println("input layer $inputSize x $outputSize")
+            println("input layer $inputSize x $outputSize, layers: ${layerWeights.size}")
         }
     }
 
@@ -43,43 +58,85 @@ class BackpropagationNeuralNetwork(inputSize: Int,
     }
 
     fun learn(x: FloatMatrix, y: FloatMatrix, steps: Int = 10) {
-        (1..steps).forEach { i ->
+        (1..steps).forEach { step ->
 
             // feed forward
-            val yEstimated = feedForward(x)
+            val yEstimatedWithFeatures = feedForwardWithFeatures(x)
+            val yEstimated = yEstimatedWithFeatures.first
+            val intermediateFeatures = yEstimatedWithFeatures.second
 
             // back propagate
 
-            // calculate error
+            // calculate error from training signal on last layer
+            val lastLayerWeights = layerWeights.last()
             // y, is the teacher signal (ideal output), yEstimated is our network's current guess.
-            val yErrors = y
-                    .sub(yEstimated)
+            val yError = y.sub(yEstimated)
+            val yDelta = yError
                     .mul(yEstimated.apply(Functions.sigmoidDerivative)) // error delta * derivative of activation function (sigmoid factored out)
                     .mul(learningRate)
 
-            val errorGradients = yEstimated.transpose().mmul(yErrors)
-           // println(errorGradients)
-            weights.addi(errorGradients) // update weights
+            val contributingOutput = intermediateFeatures[intermediateFeatures.size - 2]
+            val errorGradients = contributingOutput.transpose().mmul(yDelta)
+            lastLayerWeights.addi(errorGradients)
 
-            // will do these on all subsequent layers
-//            // calculate layer 2 contribution to the l1 error, derive from weights (feature estimation error)
-//            val featureErrors = decode
-//                    .mmul(yErrors.transpose())
-//                    .transpose()    // two transposes on smaller matrices (yErrors / features errors is cheaper than performing on large decode matrix
-//                    .mul(feature.apply(Functions.sigmoidDerivative)) // error delta * derivative of activation function (sigmoid factored out)
-//            //  .mul(activationRate)
+            // propagate to previous layers
+            if (layerWeights.size > 1) {
+                var nextLayerDelta = yDelta
 
-//            val encodeGradients = x.transpose().mmul(featureErrors)
-//            encode.add(encodeGradients) // update weights
+                // continue propagating error back to subsequent layers
+                // calculate layer contribution to the next layer error, derive from weights (feature estimation error)
+                (layerWeights.size - 2 downTo 0).forEach { i ->
+                    val currentLayerWeights = layerWeights[i]
+
+                    // determine how much layer contributed to the error in next layer).
+                    // TODO figure out why i have to alternate transposes...
+                    //val layerError = layerWeights[i + 1].mmul(nextLayerDelta).transpose()
+                    val layerError = when (layerWeights[i + 1].columns == nextLayerDelta.rows) {
+                        true -> layerWeights[i + 1].mmul(nextLayerDelta).transpose()
+                        false -> layerWeights[i + 1].mmul(nextLayerDelta.transpose()).transpose()
+                    }
+                    val layerOutput = intermediateFeatures[i + 1]
+                    val layerDelta = layerError
+                            .mul(layerOutput.apply(Functions.sigmoidDerivative))
+
+                    // multiply errors by the contributing input
+                    val contributingOutput = intermediateFeatures[i]
+                    val layerErrorGradients = contributingOutput
+                            .transpose()
+                            .mmul(layerDelta)
+
+                    // update weights
+                    currentLayerWeights.addi(layerErrorGradients)
+
+                    nextLayerDelta = layerDelta
+                }
+            }
 
             if (log) {
                 val error = Errors.compute(y, yEstimated)
-                println("$i -> error: $error")
+                println("$step -> error: $error")
             }
         }
     }
 
     // only feed-forward to hidden (encoded) layer, return encoded feature
-    fun feedForward(x: FloatMatrix) = x.mmul(weights).apply(Functions.sigmoid)
+    fun feedForward(x: FloatMatrix): FloatMatrix {
+        var currentFeature = x
+        (0 until layerWeights.size).forEach { i ->
+            currentFeature = currentFeature.mmul(layerWeights[i]).apply(Functions.sigmoid)
+        }
+        return currentFeature
+    }
+
+    private fun feedForwardWithFeatures(x: FloatMatrix): Pair<FloatMatrix, List<FloatMatrix>> {
+        val features = mutableListOf<FloatMatrix>()
+        features.add(x)
+        var currentFeature = x
+        (0 until layerWeights.size).forEach { i ->
+            currentFeature = currentFeature.mmul(layerWeights[i]).apply(Functions.sigmoid)
+            features.add(currentFeature)
+        }
+        return Pair(currentFeature, features)
+    }
 
 }
