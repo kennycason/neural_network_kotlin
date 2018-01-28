@@ -70,7 +70,7 @@ Unsurprisingly, there is also some overlap demonstrating cases where democrats a
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/cod_rna_feature_clustering.png" width="450px"/>
 
 
-### Deep Convolutional Autoencoder
+# Deep Convolutional Autoencoder
 
 Vanila Autoencoders work great for low dimensional data.
 However, high dimensional data, such as images require a few tricks to effectively train.
