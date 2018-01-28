@@ -26,7 +26,7 @@ class MNISTAutoEncoderTest {
 
         val start = System.currentTimeMillis()
         val rand = Random()
-        (0.. 1000).forEach { i ->
+        (0.. 10_000).forEach { i ->
             val x = xs.get(rand.nextInt(xs.size))
             layer.learn(x, 1)
 

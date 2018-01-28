@@ -80,6 +80,6 @@ class BackpropagationNeuralNetwork(inputSize: Int,
     }
 
     // only feed-forward to hidden (encoded) layer, return encoded feature
-    fun feedForward(x: FloatMatrix) = x.mmul(weights).applyi(Functions.sigmoid)
+    fun feedForward(x: FloatMatrix) = x.mmul(weights).apply(Functions.sigmoid)
 
 }

@@ -9,7 +9,8 @@ import javax.imageio.ImageIO
 
 
 class Image {
-    private val bi: BufferedImage
+
+    val bi: BufferedImage
 
     constructor(file: String) {
         println("file: " + file)

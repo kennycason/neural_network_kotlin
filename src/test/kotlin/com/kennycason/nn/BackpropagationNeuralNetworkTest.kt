@@ -8,7 +8,7 @@ import org.junit.Test
 class BackpropagationNeuralNetworkTest {
 
     @Test
-    fun simpl() {
+    fun simple() {
         val x = FloatMatrix(listOf(0.0f, 1.0f)).transpose()
         val y = FloatMatrix(listOf(0.0f))
 

@@ -44,8 +44,9 @@ class DeepAutoEncoderTest {
 
         val layer = DeepAutoEncoder(
                 layerDimensions = arrayOf(
-                        arrayOf(vectorSize, (vectorSize * 0.75).toInt()),
-                        arrayOf((vectorSize * 0.75).toInt(), (vectorSize * 0.50).toInt()),
+                        arrayOf(vectorSize, (vectorSize * 1.50).toInt()),
+                        arrayOf((vectorSize * 1.50).toInt(), (vectorSize * 1.00).toInt()),
+                        arrayOf((vectorSize * 1.00).toInt(), (vectorSize * 0.50).toInt()),
                         arrayOf((vectorSize * 0.50).toInt(), (vectorSize * 0.25).toInt())//,
                        // arrayOf((vectorSize * 0.25).toInt(), (vectorSize * 0.10).toInt())
                 ),

@@ -5,6 +5,9 @@ import com.kennycason.nn.math.Errors
 import org.jblas.FloatMatrix
 import org.junit.Test
 
+/**
+ * for these demos you should take the results and plot on a labeled x,y scatter plot
+ */
 class ClusteringAutoEncoderTest {
 
     @Test

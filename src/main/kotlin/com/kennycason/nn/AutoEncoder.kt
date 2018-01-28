@@ -80,10 +80,10 @@ class AutoEncoder(visibleSize: Int,
     }
 
     // only feed-forward to hidden (encoded) layer, return encoded feature
-    fun encode(x: FloatMatrix) = x.mmul(encode).applyi(Functions.sigmoid)
+    fun encode(x: FloatMatrix) = x.mmul(encode).apply(Functions.sigmoid)
 
     // given an encoded feature, feed-forward through decoding weights to generate data
-    fun decode(feature: FloatMatrix) = feature.mmul(decode).applyi(Functions.sigmoid)
+    fun decode(feature: FloatMatrix) = feature.mmul(decode).apply(Functions.sigmoid)
 
     // full forward propagation
     fun feedForward(x: FloatMatrix) = decode(encode(x))
