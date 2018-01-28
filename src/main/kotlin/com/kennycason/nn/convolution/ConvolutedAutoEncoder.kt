@@ -1,15 +1,16 @@
 package com.kennycason.nn.convolution
 
+import com.kennycason.nn.AbstractAutoEncoder
 import com.kennycason.nn.AutoEncoder
 import com.kennycason.nn.math.Errors
 import org.jblas.FloatMatrix
 import java.util.*
 
-class ConvolutedLayer(private val visibleDim: Dim,
-                      private val hiddenDim: Dim,
-                      private val paritions: Dim,
-                      private val learningRate: Float,
-                      private val log: Boolean) {
+class ConvolutedAutoEncoder(private val visibleDim: Dim,
+                            private val hiddenDim: Dim,
+                            private val paritions: Dim,
+                            private val learningRate: Float,
+                            private val log: Boolean) : AbstractAutoEncoder() {
 
     private val random = Random()
     private val visibleChunkRows = visibleDim.rows / paritions.rows
@@ -45,7 +46,7 @@ class ConvolutedLayer(private val visibleDim: Dim,
         )
     })
 
-    fun learn(xs: List<FloatMatrix>, steps: Int = 1000) {
+    override fun learn(xs: List<FloatMatrix>, steps: Int) {
         var currentFeatures = xs
 
         (0.. steps).forEach { i ->
@@ -61,7 +62,7 @@ class ConvolutedLayer(private val visibleDim: Dim,
         }
     }
 
-    fun learn(x: FloatMatrix, steps: Int = 10) {
+    override fun learn(x: FloatMatrix, steps: Int) {
         val xs = splitInput(x)
 
         (0 until autoencoders.size).forEach { i ->
@@ -69,7 +70,7 @@ class ConvolutedLayer(private val visibleDim: Dim,
         }
     }
 
-    fun encode(x: FloatMatrix): FloatMatrix {
+    override fun encode(x: FloatMatrix): FloatMatrix {
         val xs = splitInput(x)
 
         val ys = autoencoders
@@ -81,7 +82,7 @@ class ConvolutedLayer(private val visibleDim: Dim,
                 hiddenChunkRows, hiddenChunkCols).m
     }
 
-    fun decode(y: FloatMatrix): FloatMatrix {
+    override fun decode(y: FloatMatrix): FloatMatrix {
         val ys = splitOutput(y)
 
         val xs = autoencoders
@@ -93,7 +94,7 @@ class ConvolutedLayer(private val visibleDim: Dim,
                 visibleChunkRows, visibleChunkCols).m
     }
 
-    fun feedForward(x: FloatMatrix) = decode(encode(x))
+    override fun feedForward(x: FloatMatrix) = decode(encode(x))
 
     private fun splitInput(x: FloatMatrix) = MatrixRegions.readRegions(
             FlatMatrix(x, visibleDim.rows, visibleDim.cols),

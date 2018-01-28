@@ -20,7 +20,7 @@ object ConvolutedAutoEncoderFactory {
         println(layerDimensions.joinToString(",\n"))
 
         val layers = layerDimensions.map { dim ->
-            ConvolutedLayer(visibleDim = dim.visibleDim,
+            ConvolutedAutoEncoder(visibleDim = dim.visibleDim,
                     paritions = dim.partitions,
                     hiddenDim = dim.hiddenDim,
                     learningRate = learningRate,

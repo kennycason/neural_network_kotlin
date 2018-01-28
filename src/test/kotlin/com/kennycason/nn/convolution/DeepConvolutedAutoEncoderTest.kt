@@ -85,28 +85,28 @@ class DeepConvolutedAutoEncoderTest {
 //                learningRate = 0.01f
 //        )
 
-        val layer1 = ConvolutedLayer(
+        val layer1 = ConvolutedAutoEncoder(
                 visibleDim = Dim(60 * 3, 60),
                 hiddenDim = Dim(360, 120),
                 paritions = Dim(60, 60),
                 learningRate = 0.1f,
                 log = false
         )
-        val layer2 = ConvolutedLayer(
+        val layer2 = ConvolutedAutoEncoder(
                 visibleDim = Dim(360, 120),
                 hiddenDim = Dim(180, 120),
                 paritions = Dim(30, 30),
                 learningRate = 0.1f,
                 log = false
         )
-        val layer3 = ConvolutedLayer(
+        val layer3 = ConvolutedAutoEncoder(
                 visibleDim = Dim(180, 120),
                 hiddenDim = Dim(120, 60),
                 paritions = Dim(20, 20),
                 learningRate = 0.1f,
                 log = false
         )
-        val layer4 = ConvolutedLayer(
+        val layer4 = ConvolutedAutoEncoder(
                 visibleDim = Dim(120, 60),
                 hiddenDim = Dim(60, 30),
                 paritions = Dim(10, 10),

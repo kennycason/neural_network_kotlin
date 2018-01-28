@@ -9,7 +9,7 @@ class ConvolutionLayerTest {
 
     @Test
     fun encodeDecodeTest() {
-        val convolutedLayer = ConvolutedLayer(
+        val convolutedLayer = ConvolutedAutoEncoder(
                 visibleDim = Dim(100, 100),
                 hiddenDim = Dim(20, 20),
                 paritions = Dim(10, 10),

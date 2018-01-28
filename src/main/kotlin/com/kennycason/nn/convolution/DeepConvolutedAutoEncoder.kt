@@ -1,16 +1,31 @@
 package com.kennycason.nn.convolution
 
+import com.kennycason.nn.AbstractAutoEncoder
 import com.kennycason.nn.math.Errors
 import org.jblas.FloatMatrix
 import java.util.*
 
-class DeepConvolutedAutoEncoder(private val layers: Array<ConvolutedLayer>,
-                                private val log: Boolean = true) {
+class DeepConvolutedAutoEncoder(private val layers: Array<ConvolutedAutoEncoder>,
+                                private val log: Boolean = true) : AbstractAutoEncoder() {
 
     private val random = Random()
 
-    fun learn(xs: List<FloatMatrix>, steps: Int = 1000) {
-        var currentFeatures = xs
+    override fun learn(xs: List<FloatMatrix>, steps: Int) {
+        (0..steps).forEach { j ->
+            // sgd
+            val x = xs[random.nextInt(xs.size)]
+            learn(x, 1)
+
+            // report error for current training data TODO report rolling avg error
+            if (j % 100 == 0 && log) {
+                val error = Errors.compute(x, feedForward(x))
+                println("$j -> error: $error")
+            }
+        }
+    }
+
+    override fun learn(x: FloatMatrix, steps: Int) {
+        var currentFeature = x
         layers.forEachIndexed { i, layer ->
             if (log) {
                 println("training layer: ${i + 1}")
@@ -18,26 +33,21 @@ class DeepConvolutedAutoEncoder(private val layers: Array<ConvolutedLayer>,
 
             (0..steps).forEach { j ->
                 // sgd
-                val x = currentFeatures[random.nextInt(currentFeatures.size)]
-
-                layer.learn(x, 1)
+                layer.learn(currentFeature, 1)
 
                 // report error for current training data TODO report rolling avg error
                 if (j % 100 == 0 && log) {
-                    val error = Errors.compute(x, layer.feedForward(x))
+                    val error = Errors.compute(currentFeature, layer.feedForward(currentFeature))
                     println("$j -> error: $error")
                 }
             }
 
             // generate encoded features to pass on to next layer
-            println("encoding features for next layer training")
-            currentFeatures = currentFeatures
-                    .map { x -> layer.encode(x) }
-                    .toList()
+            currentFeature = layer.encode(currentFeature)
         }
     }
 
-    fun encode(x: FloatMatrix): FloatMatrix {
+    override fun encode(x: FloatMatrix): FloatMatrix {
         var currentFeature = x
         // feed forward use hidden as input to next layer
         for (i in (0 until layers.size)) {
@@ -46,7 +56,7 @@ class DeepConvolutedAutoEncoder(private val layers: Array<ConvolutedLayer>,
         return currentFeature
     }
 
-    fun decode(feature: FloatMatrix): FloatMatrix {
+    override fun decode(feature: FloatMatrix): FloatMatrix {
         var currentFeature = feature
         // feed forward use hidden as input to next layer
 
@@ -56,6 +66,6 @@ class DeepConvolutedAutoEncoder(private val layers: Array<ConvolutedLayer>,
         return currentFeature
     }
 
-    fun feedForward(x: FloatMatrix) = decode(encode(x))
+    override fun feedForward(x: FloatMatrix) = decode(encode(x))
 
 }

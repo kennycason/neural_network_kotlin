@@ -1,16 +1,13 @@
 package com.kennycason.nn.convolution
 
+import com.kennycason.nn.AbstractAutoEncoder
+import com.kennycason.nn.AutoEncoder
+import com.kennycason.nn.DeepAutoEncoder
 import com.kennycason.nn.data.image.*
 import org.jblas.FloatMatrix
-import org.junit.Test
 
-import java.awt.Color
 import java.awt.Graphics
-import java.awt.image.BufferedImage
-import java.io.File
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
-import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.WindowConstants
@@ -25,10 +22,10 @@ import javax.swing.WindowConstants
  */
 
 fun main(args: Array<String>) {
-    ConwaysGameOfLife().run()
+    DeepHybridConvolutedAutoEncoderPokemonJFrameDemo().run()
 }
 
-class ConwaysGameOfLife {
+class DeepHybridConvolutedAutoEncoderPokemonJFrameDemo {
     val random = Random()
     val screenWidth = 920
     val screenHeight = 660
@@ -41,37 +38,60 @@ class ConwaysGameOfLife {
             cols = 15,
             n = 151)
 
-    val layer1 = ConvolutedLayer(
+    val layer1 = ConvolutedAutoEncoder(
             visibleDim = Dim(60 * 3, 60),
             hiddenDim = Dim(360, 120),
             paritions = Dim(60, 60),
             learningRate = 0.1f,
             log = false
     )
-//    val layer2 = ConvolutedLayer(
-//            visibleDim = Dim(360, 120),
-//            hiddenDim = Dim(180, 120),
-//            paritions = Dim(30, 30),
+    val layer2 = ConvolutedAutoEncoder(
+            visibleDim = Dim(360, 120),
+            hiddenDim = Dim(180, 120),
+            paritions = Dim(30, 30),
+            learningRate = 0.1f,
+            log = false
+    )
+    val layer3 = ConvolutedAutoEncoder(
+            visibleDim = Dim(180, 120),
+            hiddenDim = Dim(120, 60),
+            paritions = Dim(20, 20),
+            learningRate = 0.1f,
+            log = false
+    )
+//    val layer3 = AutoEncoder(
+//            visibleSize = 180 * 120,
+//            hiddenSize = 60 * 60,
 //            learningRate = 0.1f,
 //            log = false
 //    )
-//    val layer3 = ConvolutedLayer(
-//            visibleDim = Dim(180, 120),
-//            hiddenDim = Dim(120, 60),
-//            paritions = Dim(20, 20),
-//            learningRate = 0.1f,
-//            log = false
-//    )
-//    val layer4 = ConvolutedLayer(
+    val layer4 = ConvolutedAutoEncoder(
+            visibleDim = Dim(120, 60),
+            hiddenDim = Dim(60, 30),
+            paritions = Dim(10, 10),
+            learningRate = 0.1f,
+            log = false
+    )
+
+//    val layer5 = ConvolutedAutoEncoder(
 //            visibleDim = Dim(120, 60),
 //            hiddenDim = Dim(60, 30),
 //            paritions = Dim(10, 10),
 //            learningRate = 0.1f,
 //            log = false
 //    )
+    val layer5 = AutoEncoder(
+            visibleSize = 60 * 30,
+            hiddenSize = 100,
+            learningRate = 0.1f,
+            log = false
+    )
 
-    val layer = DeepConvolutedAutoEncoder(
-            layers = arrayOf(layer1/*, layer2, layer3, layer4, layer5, layer6*/))
+
+    val layer = DeepAutoEncoder(
+            layers = arrayOf<AbstractAutoEncoder>(
+                    layer1, layer2, layer3, layer4, layer5/*, layer6*/),
+            log = true)
 
     var i = 0
     val m = 0

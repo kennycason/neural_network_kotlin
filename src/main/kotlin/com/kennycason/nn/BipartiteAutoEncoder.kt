@@ -5,32 +5,35 @@ import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
 import java.util.*
 
-class AutoEncoder(visibleSize: Int,
-                  hiddenSize: Int,
-                  private val learningRate: Float = 0.1f,
-                  private val log: Boolean = true) : AbstractAutoEncoder() {
+/**
+ * Attempt to train a single bipartite graph to be both discriminative and generative via SGD
+ *
+ * In progress, do not use
+ */
+class BipartiteAutoEncoder(visibleSize: Int,
+                           hiddenSize: Int,
+                           private val learningRate: Float = 0.1f,
+                           private val log: Boolean = true) : AbstractAutoEncoder() {
 
     private val random = Random()
-    val encode: FloatMatrix    // weight matrix that learns one level of encoding
-    val decode: FloatMatrix    // weight matrix that learns one level of decoding
+    val weights: FloatMatrix
 
     init {
         if (visibleSize * hiddenSize <= 0) { // also checks for integer overflow
             throw RuntimeException("rows x columns exceeds integer size [$visibleSize x $hiddenSize = ${visibleSize * hiddenSize}]")
         }
         // each row maps to a single neuron (note for matrix math orientation)
-        encode = FloatMatrix.rand(visibleSize, hiddenSize).mul(2.0f).sub(1.0f) // scale values between -1 and 1
-        decode = FloatMatrix.rand(hiddenSize, visibleSize).mul(2.0f).sub(1.0f) // scale values between -1 and 1
+        weights = FloatMatrix.rand(visibleSize, hiddenSize).mul(2.0f).sub(1.0f) // scale values between -1 and 1
 
         if (log) {
-            println("encode layer $visibleSize x $hiddenSize, decode layer $hiddenSize x $visibleSize")
+            println("weight dimensions $visibleSize x $hiddenSize")
         }
     }
 
     override fun learn(xs: List<FloatMatrix>, steps: Int) {
         var currentFeatures = xs
 
-        (0.. steps).forEach { i ->
+        (0..steps).forEach { i ->
             // sgd
             val x = currentFeatures[random.nextInt(currentFeatures.size)]
             learn(x, 1)
@@ -59,16 +62,16 @@ class AutoEncoder(visibleSize: Int,
                     .mul(learningRate)
 
             val decodeGradients = feature.transpose().mmul(yErrors)
-            decode.addi(decodeGradients) // update weights
+            weights.addi(decodeGradients) // update weights
 
+            val decode = weights.transpose()
             // calculate layer 2 contribution to the l1 error, derive from weights (feature estimation error)
-            val featureErrors = decode
-                    .mmul(yErrors.transpose())
-                    .transpose()    // two transposes on smaller matrices (yErrors / features errors is cheaper than performing on large decode matrix
+            val featureErrors = decode.mmul(yErrors.transpose())
+                    .transpose()
                     .mul(feature.apply(Functions.sigmoidDerivative)) // error delta * derivative of activation function (sigmoid factored out)
 
             val encodeGradients = x.transpose().mmul(featureErrors)
-            encode.add(encodeGradients) // update weights
+            decode.add(encodeGradients) // update weights
 
             if (i % 100 == 0 && log) {
                 val error = Errors.compute(x, y)
@@ -78,10 +81,10 @@ class AutoEncoder(visibleSize: Int,
     }
 
     // only feed-forward to hidden (encoded) layer, return encoded feature
-    override fun encode(x: FloatMatrix) = x.mmul(encode).apply(Functions.sigmoid)
+    override fun encode(x: FloatMatrix) = x.mmul(weights).apply(Functions.sigmoid)
 
     // given an encoded feature, feed-forward through decoding weights to generate data
-    override fun decode(feature: FloatMatrix) = feature.mmul(decode).apply(Functions.sigmoid)
+    override fun decode(feature: FloatMatrix) = feature.mmul(weights.transpose()).apply(Functions.sigmoid)
 
     // full forward propagation
     override fun feedForward(x: FloatMatrix) = decode(encode(x))
