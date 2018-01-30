@@ -2,7 +2,7 @@ package com.kennycason.nn.optimization
 
 import com.kennycason.nn.AutoEncoder
 import com.kennycason.nn.math.Errors
-import com.kennycason.nn.data.image.MNISTImageLoader
+import com.kennycason.nn.data.image.MNISTDataLoader
 import com.kennycason.nn.data.PrintUtils
 import org.jblas.FloatMatrix
 import org.junit.Test
@@ -16,7 +16,7 @@ class MNISTAutoEncoderWithFeatureActivatorTest {
 
     @Test
     fun mnistDataSet() {
-        val xs = MNISTImageLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte")
+        val xs = MNISTDataLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte")
 
         val visibleSize = 28 * 28
         val hiddenSize = (visibleSize * 0.75).toInt()

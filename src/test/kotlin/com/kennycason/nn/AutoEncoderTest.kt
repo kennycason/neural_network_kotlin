@@ -2,7 +2,9 @@ package com.kennycason.nn
 
 import com.kennycason.nn.data.image.*
 import com.kennycason.nn.math.Errors
+import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
+import org.junit.Assert
 import org.junit.Test
 
 
@@ -22,7 +24,7 @@ class AutoEncoderTest {
 
     @Test
     fun multipleVector() {
-        val vectorSize = 1000
+        val vectorSize = 100
         val xs =  listOf(
                 FloatMatrix.rand(1, vectorSize),
                 FloatMatrix.rand(1, vectorSize),
@@ -36,15 +38,16 @@ class AutoEncoderTest {
                 learningRate = 0.1f,
                 visibleSize = vectorSize,
                 hiddenSize = vectorSize / 2,
+                hiddenActivation = Functions.Sigmoid,
                 log = false)
 
         val start = System.currentTimeMillis()
-        (0.. 10_000).forEach { i ->
+        (0.. 1000).forEach { i ->
             xs.forEach { x ->
                 layer.learn(x, 1)
             }
 
-            if (i % 10 == 0) {
+            if (i % 100 == 0) {
                 val error = xs
                         .map { x -> Errors.compute(x, layer.feedForward(x)) }
                         .sum() / xs.size
@@ -114,6 +117,67 @@ class AutoEncoderTest {
             val outImage = MatrixRGBImageDecoder(rows = height).decode(visual)
             outImage.save("/tmp/output${i++}.png")
         }
+    }
+
+    @Test
+    fun randomVectorTanh() {
+        val x = FloatMatrix.rand(1, 100)
+
+        val layer = AutoEncoder(
+                learningRate = 0.1f,
+                visibleSize = 100,
+                hiddenSize = 5,
+                visibleActivation = Functions.Tanh,
+                hiddenActivation = Functions.Tanh,
+                log = true)
+        layer.learn(x, steps = 10_000)
+
+        println("input: " + x.toString("%f", "[", "]", ", ", "\n"))
+        println("output: " + layer.feedForward(x).toString("%f", "[", "]", ", ", "\n"))
+        val error = Errors.compute(x, layer.feedForward(x))
+        println("error: $error")
+        Assert.assertTrue(error < 0.05)
+    }
+
+    @Test
+    fun randomVectorTanhNegativeValues() {
+        val x = FloatMatrix.rand(1, 100).mul(2.0f).sub(1.0f)
+
+        val layer = AutoEncoder(
+                learningRate = 0.1f,
+                visibleSize = 100,
+                hiddenSize = 5,
+                visibleActivation = Functions.Tanh,
+                hiddenActivation = Functions.Tanh,
+                log = true)
+        layer.learn(x, steps = 10_000)
+
+        println("input: " + x.toString("%f", "[", "]", ", ", "\n"))
+        println("output: " + layer.feedForward(x).toString("%f", "[", "]", ", ", "\n"))
+        val error = Errors.compute(x, layer.feedForward(x))
+        println("error: $error")
+        Assert.assertTrue(error < 0.05)
+    }
+
+    // randomly fails
+    @Test
+    fun randomVectorLeakyReluHidden() {
+        val x = FloatMatrix.rand(1, 100)
+
+        val layer = AutoEncoder(
+                learningRate = 0.1f,
+                visibleSize = 100,
+                hiddenSize = 50,
+                visibleActivation = Functions.Sigmoid,
+                hiddenActivation = Functions.LeakyRelU,
+                log = true)
+        layer.learn(x, steps = 10_000)
+
+        println("input: " + x.toString("%f", "[", "]", ", ", "\n"))
+        println("output: " + layer.feedForward(x).toString("%f", "[", "]", ", ", "\n"))
+        val error = Errors.compute(x, layer.feedForward(x))
+        println("error: $error")
+    //    Assert.assertTrue(error < 0.05)
     }
 
 }

@@ -1,5 +1,6 @@
 package com.kennycason.nn
 
+import com.kennycason.nn.math.ActivationFunction
 import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
@@ -13,6 +14,7 @@ import java.util.*
 class BipartiteAutoEncoder(visibleSize: Int,
                            hiddenSize: Int,
                            private val learningRate: Float = 0.1f,
+                           private val activation: ActivationFunction = Functions.Sigmoid,
                            private val log: Boolean = true) : AbstractAutoEncoder() {
 
     private val random = Random()
@@ -58,7 +60,7 @@ class BipartiteAutoEncoder(visibleSize: Int,
             // x, the input is also the teacher signal (ideal output), y is generated output
             val yErrors = x
                     .sub(y)
-                    .mul(y.apply(Functions.sigmoidDerivative)) // error delta * derivative of activation function (sigmoid factored out)
+                    .mul(y.apply(activation::df)) // error delta * derivative of activation function (sigmoid factored out)
                     .mul(learningRate)
 
             val decodeGradients = feature.transpose().mmul(yErrors)
@@ -68,7 +70,7 @@ class BipartiteAutoEncoder(visibleSize: Int,
             // calculate layer 2 contribution to the l1 error, derive from weights (feature estimation error)
             val featureErrors = decode.mmul(yErrors.transpose())
                     .transpose()
-                    .mul(feature.apply(Functions.sigmoidDerivative)) // error delta * derivative of activation function (sigmoid factored out)
+                    .mul(feature.apply(activation::df)) // error delta * derivative of activation function (sigmoid factored out)
 
             val encodeGradients = x.transpose().mmul(featureErrors)
             decode.add(encodeGradients) // update weights
@@ -81,10 +83,10 @@ class BipartiteAutoEncoder(visibleSize: Int,
     }
 
     // only feed-forward to hidden (encoded) layer, return encoded feature
-    override fun encode(x: FloatMatrix) = x.mmul(weights).apply(Functions.sigmoid)
+    override fun encode(x: FloatMatrix) = x.mmul(weights).apply(activation::f)
 
     // given an encoded feature, feed-forward through decoding weights to generate data
-    override fun decode(feature: FloatMatrix) = feature.mmul(weights.transpose()).apply(Functions.sigmoid)
+    override fun decode(feature: FloatMatrix) = feature.mmul(weights.transpose()).apply(activation::f)
 
     // full forward propagation
     override fun feedForward(x: FloatMatrix) = decode(encode(x))

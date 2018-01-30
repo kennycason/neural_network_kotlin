@@ -1,7 +1,10 @@
 package com.kennycason.nn.convolution
 
 import com.kennycason.nn.data.image.*
+import com.kennycason.nn.math.Errors
+import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
+import org.junit.Assert
 import org.junit.Test
 
 
@@ -33,6 +36,11 @@ class DeepConvolutedAutoEncoderTest {
             val outImage = MatrixRGBImageDecoder(rows = height).decode(visual)
             outImage.save("/tmp/output_ninja_$i.png")
         }
+
+        val error = Errors.compute(imageData, layer.feedForward(imageData))
+
+        println("error -> $error")
+        Assert.assertTrue(error < 3.0)
     }
 
     @Test
@@ -156,11 +164,10 @@ class DeepConvolutedAutoEncoderTest {
                         rows = 11,
                         cols = 15,
                         matrixImageDecoder = MatrixRGBImageDecoder(rows = 60))
-                image.save("/tmp/very_deep_generated_pokemon_$i.png")
+                image.save("/tmp/deep_generated_pokemon_$i.png")
                 j += 2
             }
         }
-
     }
 
 }

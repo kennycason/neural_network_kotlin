@@ -6,48 +6,57 @@ import org.jblas.FloatMatrix
 import java.util.*
 
 class DeepConvolutedAutoEncoder(private val layers: Array<ConvolutedAutoEncoder>,
-                                private val log: Boolean = true) : AbstractAutoEncoder() {
+                                private val log: Boolean = true) {
 
     private val random = Random()
 
-    override fun learn(xs: List<FloatMatrix>, steps: Int) {
-        (0..steps).forEach { j ->
-            // sgd
-            val x = xs[random.nextInt(xs.size)]
-            learn(x, 1)
-
-            // report error for current training data TODO report rolling avg error
-            if (j % 100 == 0 && log) {
-                val error = Errors.compute(x, feedForward(x))
-                println("$j -> error: $error")
-            }
-        }
-    }
-
-    override fun learn(x: FloatMatrix, steps: Int) {
-        var currentFeature = x
+    // learn layer by layer greedily
+    fun learn(xs: List<FloatMatrix>, steps: Int) {
+        var currentFeatures = xs
         layers.forEachIndexed { i, layer ->
             if (log) {
                 println("training layer: ${i + 1}")
             }
+            (0.. steps).forEach { j ->
+                // sgd
+                val x = currentFeatures[random.nextInt(currentFeatures.size)]
+                layer.learn(x, 1)
 
-            (0..steps).forEach { j ->
+                // report error for current training data
+                if (j % 100 == 0 && log) {
+                    val error = Errors.compute(x, layer.feedForward(x))
+                    println("$j -> error: $error")
+                }
+            }
+            // pass encoded features to next layer
+            currentFeatures = currentFeatures.map { f -> layer.encode(f) }
+            println(currentFeatures.first().columns)
+        }
+    }
+
+    // learn all layers continuously
+    fun learnContinuously(xs: List<FloatMatrix>, steps: Int) {
+        (0.. steps).forEach { step ->
+            val x = xs[random.nextInt(xs.size)]
+
+            var currentFeature = x
+            layers.forEachIndexed {i, layer ->
                 // sgd
                 layer.learn(currentFeature, 1)
 
                 // report error for current training data TODO report rolling avg error
-                if (j % 100 == 0 && log) {
+                if (step % 100 == 0 && log) {
                     val error = Errors.compute(currentFeature, layer.feedForward(currentFeature))
-                    println("$j -> error: $error")
+                    println("$step -> error: $error")
                 }
-            }
 
-            // generate encoded features to pass on to next layer
-            currentFeature = layer.encode(currentFeature)
+                // generate encoded features to pass on to next layer
+                currentFeature = layer.encode(currentFeature)
+            }
         }
     }
 
-    override fun encode(x: FloatMatrix): FloatMatrix {
+    fun encode(x: FloatMatrix): FloatMatrix {
         var currentFeature = x
         // feed forward use hidden as input to next layer
         for (i in (0 until layers.size)) {
@@ -56,7 +65,7 @@ class DeepConvolutedAutoEncoder(private val layers: Array<ConvolutedAutoEncoder>
         return currentFeature
     }
 
-    override fun decode(feature: FloatMatrix): FloatMatrix {
+    fun decode(feature: FloatMatrix): FloatMatrix {
         var currentFeature = feature
         // feed forward use hidden as input to next layer
 
@@ -66,6 +75,6 @@ class DeepConvolutedAutoEncoder(private val layers: Array<ConvolutedAutoEncoder>
         return currentFeature
     }
 
-    override fun feedForward(x: FloatMatrix) = decode(encode(x))
+    fun feedForward(x: FloatMatrix) = decode(encode(x))
 
 }

@@ -130,6 +130,15 @@ trained in 870ms
 total error: 0.012446605931539503
 ```
 
+### MNIST Digits
+
+Layer Sizes: [784, 300, 10], Learning Rate: 0.15, Steps: 1,000,000, Algorithm: Stochastic Gradient Descent
+
+```
+Results on Training Data
+errors: 695/60000 = 1.1583332903683186%
+accuracy: 98.8%
+```
 
 # Notes
 

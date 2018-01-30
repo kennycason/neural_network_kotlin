@@ -2,6 +2,7 @@ package com.kennycason.nn
 
 import com.kennycason.nn.data.image.*
 import com.kennycason.nn.math.Errors
+import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
 import org.junit.Assert
 import org.junit.Test
@@ -124,6 +125,8 @@ class BackpropagationNeuralNetworkTest {
         Assert.assertTrue(error < 0.09)
     }
 
+    // (leaky) relu = 2.2e-6 error or fail. likely due to random states of nn
+    // sigmoid = 0.05
     @Test
     fun deepRandom() {
         val xLen = 10
@@ -145,6 +148,8 @@ class BackpropagationNeuralNetworkTest {
 
         val layer = BackpropagationNeuralNetwork(
                 learningRate = 0.1f,
+                hiddenActivation = Functions.Sigmoid,
+                outputActivation = Functions.Sigmoid,
                 layerSizes = arrayOf(
                         xLen,
                         (xLen * 1.5).toInt(),

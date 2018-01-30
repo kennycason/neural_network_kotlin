@@ -1,5 +1,8 @@
 package com.kennycason.nn.convolution
 
+import com.kennycason.nn.math.ActivationFunction
+import com.kennycason.nn.math.Functions
+
 /**
  * Generate a convolutional network based on input parameters
  *
@@ -14,6 +17,8 @@ object ConvolutedAutoEncoderFactory {
     fun generateConvolutedAutoencoder(initialVisibleDim: Dim,
                                       layers: Int,
                                       minHiddenDim: Int = 10,
+                                      visibleActivation: ActivationFunction = Functions.Sigmoid,
+                                      hiddenActivation: ActivationFunction = Functions.Sigmoid,
                                       learningRate: Float = 0.1f): DeepConvolutedAutoEncoder {
         val layerDimensions = generateDimensions(initialVisibleDim, layers, minHiddenDim)
 
@@ -24,6 +29,8 @@ object ConvolutedAutoEncoderFactory {
                     paritions = dim.partitions,
                     hiddenDim = dim.hiddenDim,
                     learningRate = learningRate,
+                    visibleActivation = visibleActivation,
+                    hiddenActivation = hiddenActivation,
                     log = false)
         }.toTypedArray()
 

@@ -1,5 +1,6 @@
 package com.kennycason.nn
 
+import com.kennycason.nn.math.ActivationFunction
 import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
 import com.sun.org.apache.xalan.internal.utils.FeatureManager
@@ -11,6 +12,8 @@ import java.util.*
  */
 class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
                                    private val learningRate: Float = 0.1f,
+                                   private val hiddenActivation: ActivationFunction = Functions.Sigmoid,
+                                   private val outputActivation: ActivationFunction = Functions.Sigmoid,
                                    private val log: Boolean = true) {
 
     private val inputSize: Int
@@ -36,7 +39,7 @@ class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
         outputSize = layerSizes.last()
 
         if (log) {
-            println("input layer $inputSize x $outputSize, layers: ${layerWeights.size}")
+            println("layer dims: [${layerSizes.joinToString(",")}]")
         }
     }
 
@@ -50,8 +53,8 @@ class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
             learn(x, y, 1)
 
             // report error for current training data TODO report rolling avg error
-            if (i % 10 == 0 && log) {
-                val error = Errors.compute(x, feedForward(x))
+            if (i % 100 == 0 && log) {
+                val error = Errors.compute(y, feedForward(x))
                 println("$i -> error: $error")
             }
         }
@@ -72,50 +75,48 @@ class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
             // y, is the teacher signal (ideal output), yEstimated is our network's current guess.
             val yError = y.sub(yEstimated)
             val yDelta = yError
-                    .mul(yEstimated.apply(Functions.sigmoidDerivative)) // error delta * derivative of activation function (sigmoid factored out)
+                    .mul(yEstimated.apply(outputActivation::df)) // error delta * derivative of activation function (sigmoid factored out)
                     .mul(learningRate)
 
             val contributingOutput = intermediateFeatures[intermediateFeatures.size - 2]
             val errorGradients = contributingOutput.transpose().mmul(yDelta)
             lastLayerWeights.addi(errorGradients)
 
+
+
+            if (layerWeights.size == 1) { return@forEach }
+
             // propagate to previous layers
-            if (layerWeights.size > 1) {
-                var nextLayerDelta = yDelta
+            var nextLayerDelta = yDelta
 
-                // continue propagating error back to subsequent layers
-                // calculate layer contribution to the next layer error, derive from weights (feature estimation error)
-                (layerWeights.size - 2 downTo 0).forEach { i ->
-                    val currentLayerWeights = layerWeights[i]
+            // continue propagating error back to subsequent layers
+            // calculate layer contribution to the next layer error, derive from weights (feature estimation error)
+            (layerWeights.size - 2 downTo 0).forEach { i ->
+                val currentLayerWeights = layerWeights[i]
 
-                    // determine how much layer contributed to the error in next layer).
-                    // TODO figure out why i have to alternate transposes...
-                    //val layerError = layerWeights[i + 1].mmul(nextLayerDelta).transpose()
-                    val layerError = when (layerWeights[i + 1].columns == nextLayerDelta.rows) {
-                        true -> layerWeights[i + 1].mmul(nextLayerDelta).transpose()
-                        false -> layerWeights[i + 1].mmul(nextLayerDelta.transpose()).transpose()
-                    }
-                    val layerOutput = intermediateFeatures[i + 1]
-                    val layerDelta = layerError
-                            .mul(layerOutput.apply(Functions.sigmoidDerivative))
-
-                    // multiply errors by the contributing input
-                    val contributingOutput = intermediateFeatures[i]
-                    val layerErrorGradients = contributingOutput
-                            .transpose()
-                            .mmul(layerDelta)
-
-                    // update weights
-                    currentLayerWeights.addi(layerErrorGradients)
-
-                    nextLayerDelta = layerDelta
+                // determine how much layer contributed to the error in next layer).
+                // TODO figure out why i have to alternate transposes...
+                //val layerError = layerWeights[i + 1].mmul(nextLayerDelta).transpose()
+                val layerError = when (layerWeights[i + 1].columns == nextLayerDelta.rows) {
+                    true -> layerWeights[i + 1].mmul(nextLayerDelta).transpose()
+                    false -> layerWeights[i + 1].mmul(nextLayerDelta.transpose()).transpose()
                 }
+                val layerOutput = intermediateFeatures[i + 1]
+                val layerDelta = layerError
+                        .mul(layerOutput.apply(hiddenActivation::df))
+
+                // multiply errors by the contributing input
+                val contributingOutput = intermediateFeatures[i]
+                val layerErrorGradients = contributingOutput
+                        .transpose()
+                        .mmul(layerDelta)
+
+                // update weights
+                currentLayerWeights.addi(layerErrorGradients)
+
+                nextLayerDelta = layerDelta
             }
 
-            if (log) {
-                val error = Errors.compute(y, yEstimated)
-                println("$step -> error: $error")
-            }
         }
     }
 
@@ -123,7 +124,9 @@ class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
     fun feedForward(x: FloatMatrix): FloatMatrix {
         var currentFeature = x
         (0 until layerWeights.size).forEach { i ->
-            currentFeature = currentFeature.mmul(layerWeights[i]).apply(Functions.sigmoid)
+            val activationFunction = if (i == layerWeights.size - 1) { outputActivation::f } else { hiddenActivation::f }
+            currentFeature = currentFeature.mmul(layerWeights[i]).apply(activationFunction)
+
         }
         return currentFeature
     }
@@ -133,7 +136,8 @@ class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
         features.add(x)
         var currentFeature = x
         (0 until layerWeights.size).forEach { i ->
-            currentFeature = currentFeature.mmul(layerWeights[i]).apply(Functions.sigmoid)
+            val activationFunction = if (i == layerWeights.size - 1) { outputActivation::f } else { hiddenActivation::f }
+            currentFeature = currentFeature.mmul(layerWeights[i]).apply(activationFunction)
             features.add(currentFeature)
         }
         return Pair(currentFeature, features)

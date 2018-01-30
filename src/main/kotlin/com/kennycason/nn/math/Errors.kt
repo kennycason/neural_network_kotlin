@@ -6,6 +6,6 @@ import org.jblas.FloatMatrix
 object Errors {
     fun compute(e: FloatMatrix, a: FloatMatrix): Double {
         val errors = e.sub(a)
-        return Math.sqrt(errors.mul(e.sub(a)).sum().toDouble())
+        return Math.sqrt(errors.mul(errors).sum().toDouble())
     }
 }

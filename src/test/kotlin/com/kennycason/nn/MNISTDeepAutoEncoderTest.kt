@@ -2,7 +2,7 @@ package com.kennycason.nn
 
 import com.kennycason.nn.data.PrintUtils
 import com.kennycason.nn.data.image.CompositeImageWriter
-import com.kennycason.nn.data.image.MNISTImageLoader
+import com.kennycason.nn.data.image.MNISTDataLoader
 import com.kennycason.nn.data.image.MatrixGrayScaleImageDecoder
 import com.kennycason.nn.math.Errors
 import org.jblas.FloatMatrix
@@ -13,7 +13,7 @@ class MNISTDeepAutoEncoderTest {
     // 250k steps = 1h
     @Test
     fun mnistDataSet() {
-        val xs = MNISTImageLoader
+        val xs = MNISTDataLoader
                 .loadIdx3("/data/mnist/train-images-idx3-ubyte")
 
 

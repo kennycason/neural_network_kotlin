@@ -2,7 +2,9 @@ package com.kennycason.nn.convolution
 
 import com.kennycason.nn.AbstractAutoEncoder
 import com.kennycason.nn.AutoEncoder
+import com.kennycason.nn.math.ActivationFunction
 import com.kennycason.nn.math.Errors
+import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
 import java.util.*
 
@@ -10,6 +12,8 @@ class ConvolutedAutoEncoder(private val visibleDim: Dim,
                             private val hiddenDim: Dim,
                             private val paritions: Dim,
                             private val learningRate: Float,
+                            private val visibleActivation: ActivationFunction = Functions.Sigmoid,
+                            private val hiddenActivation: ActivationFunction = Functions.Sigmoid,
                             private val log: Boolean) : AbstractAutoEncoder() {
 
     private val random = Random()
@@ -42,6 +46,8 @@ class ConvolutedAutoEncoder(private val visibleDim: Dim,
                 visibleSize = visibleChunkRows * visibleChunkCols,
                 hiddenSize = hiddenChunkRows * hiddenChunkCols,
                 learningRate = learningRate,
+                visibleActivation = visibleActivation,
+                hiddenActivation = hiddenActivation,
                 log = log
         )
     })

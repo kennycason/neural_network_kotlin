@@ -59,7 +59,7 @@ class DeepHybridConvolutedAutoEncoderPokemonJFrameDemo {
             learningRate = 0.1f,
             log = false
     )
-//    val layer3 = AutoEncoder(
+    //    val layer3 = AutoEncoder(
 //            visibleSize = 180 * 120,
 //            hiddenSize = 60 * 60,
 //            learningRate = 0.1f,
@@ -73,7 +73,7 @@ class DeepHybridConvolutedAutoEncoderPokemonJFrameDemo {
             log = false
     )
 
-//    val layer5 = ConvolutedAutoEncoder(
+    //    val layer5 = ConvolutedAutoEncoder(
 //            visibleDim = Dim(120, 60),
 //            hiddenDim = Dim(60, 30),
 //            paritions = Dim(10, 10),
@@ -90,7 +90,7 @@ class DeepHybridConvolutedAutoEncoderPokemonJFrameDemo {
 
     val layer = DeepAutoEncoder(
             layers = arrayOf<AbstractAutoEncoder>(
-                    layer1, layer2, layer3, layer4, layer5/*, layer6*/),
+                    layer1, layer2/*, layer3, layer4, layer5, layer6*/),
             log = true)
 
     var i = 0
@@ -134,7 +134,5 @@ class DeepHybridConvolutedAutoEncoderPokemonJFrameDemo {
             i++
         }
     }
-
-
 
 }
