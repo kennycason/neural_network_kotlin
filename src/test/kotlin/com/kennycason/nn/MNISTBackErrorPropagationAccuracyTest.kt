@@ -1,17 +1,14 @@
 package com.kennycason.nn
 
-import com.kennycason.nn.convolution.ConvolutedAutoEncoder
-import com.kennycason.nn.convolution.Dim
 import com.kennycason.nn.data.image.MNISTDataLoader
-import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
 
 fun main(args: Array<String>) {
-    MNISTBackErrorPropagatoinAccuracyTest.run()
+    MNISTBackErrorPropagationAccuracyTest.run()
 }
 
-object MNISTBackErrorPropagatoinAccuracyTest {
+object MNISTBackErrorPropagationAccuracyTest {
 
     /*
      * 1. Train back prop nn only
@@ -37,7 +34,7 @@ object MNISTBackErrorPropagatoinAccuracyTest {
                 outputActivation = Functions.Sigmoid,
                 log = true)
 
-        (0..1000).forEach { i ->
+        (0..500).forEach { i ->
             println("batch $i")
             nn.learn(xs = xs, ys = labelVectors, steps = 1000)
         }
