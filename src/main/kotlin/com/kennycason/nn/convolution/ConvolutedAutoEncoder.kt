@@ -7,6 +7,8 @@ import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
 import java.util.*
+import java.util.concurrent.*
+
 
 class ConvolutedAutoEncoder(private val visibleDim: Dim,
                             private val hiddenDim: Dim,
@@ -14,7 +16,8 @@ class ConvolutedAutoEncoder(private val visibleDim: Dim,
                             private val learningRate: Float,
                             private val visibleActivation: ActivationFunction = Functions.Sigmoid,
                             private val hiddenActivation: ActivationFunction = Functions.Sigmoid,
-                            private val log: Boolean) : AbstractAutoEncoder() {
+                            private val log: Boolean,
+                            private val distributed: Boolean = false) : AbstractAutoEncoder() {
 
     private val random = Random()
     private val visibleChunkRows = visibleDim.rows / paritions.rows
@@ -53,14 +56,12 @@ class ConvolutedAutoEncoder(private val visibleDim: Dim,
     })
 
     override fun learn(xs: List<FloatMatrix>, steps: Int) {
-        var currentFeatures = xs
-
         (0.. steps).forEach { i ->
             // sgd
-            val x = currentFeatures[random.nextInt(currentFeatures.size)]
+            val x = xs[random.nextInt(xs.size)]
             learn(x, 1)
 
-            // report error for current training data TODO report rolling avg error
+            // report error for current training data
             if (i % 100 == 0 && log) {
                 val error = Errors.compute(x, feedForward(x))
                 println("$i -> error: $error")
@@ -71,9 +72,23 @@ class ConvolutedAutoEncoder(private val visibleDim: Dim,
     override fun learn(x: FloatMatrix, steps: Int) {
         val xs = splitInput(x)
 
+        if (distributed) {
+            return learnDistributed(xs, steps)
+        }
+
         (0 until autoencoders.size).forEach { i ->
             autoencoders[i].learn(xs[i], steps)
         }
+    }
+
+    private fun learnDistributed(xs: Array<FloatMatrix>, steps: Int) {
+        println("beginning distributed learning")
+        val executorService = Executors.newFixedThreadPool(8) // make configurable
+        executorService.invokeAll(
+                (0 until autoencoders.size).map { i ->
+                    Executors.callable({ autoencoders[i].learn(xs[i], steps) })
+                }
+        )
     }
 
     override fun encode(x: FloatMatrix): FloatMatrix {

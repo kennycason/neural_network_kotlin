@@ -1,5 +1,6 @@
 package com.kennycason.nn
 
+import com.kennycason.nn.data.PrintUtils
 import com.kennycason.nn.data.image.MNISTDataLoader
 import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
@@ -15,32 +16,40 @@ object MNISTBackErrorPropagationAccuracyTest {
      * 2. Select strongest feature from nn as predicted class (0-9)
      *
      * Results:
-     * errors: 695/60000 = 1.1583332903683186%
+     * errors: 695/60000 = 1.1583332903683186% (1 million steps)
+     * errors: 475/60000  = 0.7916666567325592% (2 million steps)
      */
     fun run() {
         val n = 60_000
         val xs = MNISTDataLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte").subList(0, n)
         val labels = MNISTDataLoader.loadIdx1("/data/mnist/train-labels-idx1-ubyte").subList(0, n)
-
+        val testXs = MNISTDataLoader.loadIdx3("/data/mnist/t10k-images-idx3-ubyte")
+        val testLabels = MNISTDataLoader.loadIdx1("/data/mnist/t10k-labels-idx1-ubyte")
 
         val labelVectors = buildLabelVectors(labels)
         val nn = BackpropagationNeuralNetwork(
-                learningRate = 0.1f,
+                learningRate = 0.15f,
                 layerSizes = arrayOf(
                         28 * 28, // 784
-                        300,
+                        350,
                         10),
                 hiddenActivation = Functions.Sigmoid,
                 outputActivation = Functions.Sigmoid,
-                log = true)
+                log = false)
 
-        (0..500).forEach { i ->
+        (0..100).forEach { i ->
             println("batch $i")
-            nn.learn(xs = xs, ys = labelVectors, steps = 1000)
+            nn.learn(xs = xs, ys = labelVectors, steps = 100_000)
+
+            analyzeResults(nn, xs, labels, "train")
+            analyzeResults(nn, testXs, testLabels, "test")
         }
 
+    }
+
+    private fun analyzeResults(nn: BackpropagationNeuralNetwork, xs: List<FloatMatrix>, labels: List<Int>, name: String) {
         var errors = 0
-        (0 until n).map { i ->
+        (0 until labels.size).map { i ->
             val targetLabel = labels[i]
             val y = nn.feedForward(xs[i])
             val estimatedLabel = selectClass(y)
@@ -48,12 +57,11 @@ object MNISTBackErrorPropagationAccuracyTest {
                 errors++
             }
         }
-        println("errors: $errors")
-        println("error %: ${errors.toFloat() / labels.size * 100.0}%")
+        println("$name - errors: $errors / ${labels.size}")
+        println("$name - error %: ${errors.toFloat() / labels.size * 100.0}%")
     }
 
-
-    fun selectClass(label: FloatMatrix): Int {
+    private fun selectClass(label: FloatMatrix): Int {
         var bestClass = -1
         var bestError = 1.0f
         (0 until 10).forEach { i ->
@@ -65,7 +73,7 @@ object MNISTBackErrorPropagationAccuracyTest {
         return bestClass
     }
 
-    fun buildLabelVectors(labels: List<Int>): List<FloatMatrix> {
+    private fun buildLabelVectors(labels: List<Int>): List<FloatMatrix> {
         return labels.map { label ->
             val vector = FloatMatrix(1, 10)
             vector.put(label, 1.0f)
