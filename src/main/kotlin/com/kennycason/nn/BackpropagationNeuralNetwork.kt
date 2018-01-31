@@ -44,6 +44,7 @@ class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
     }
 
     fun learn(xs: List<FloatMatrix>, ys: List<FloatMatrix>, steps: Int = 1000) {
+        var totalError = 0.0
         (0..steps).forEach { i ->
             // sgd
             val j = random.nextInt(xs.size)
@@ -52,11 +53,15 @@ class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
             val y = ys[j]   // target
             learn(x, y, 1)
 
-            // report error for current training data TODO report rolling avg error
-            if (i % 100 == 0 && log) {
-                val error = Errors.compute(y, feedForward(x))
-                println("$i -> error: $error")
-            }
+            // report error for current training data
+//            if (i % 100 == 0 && log) {
+//                val error = Errors.compute(y, feedForward(x))
+//                println("$i -> error: $error")
+//            }
+            totalError += Errors.compute(y, feedForward(x))
+        }
+        if (log) {
+            println("error for batch: ${totalError / steps}")
         }
     }
 
