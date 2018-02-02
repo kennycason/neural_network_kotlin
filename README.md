@@ -135,13 +135,12 @@ total error: 0.012446605931539503
 Layer Sizes: [784, 300, 10], Learning Rate: 0.15, Algorithm: Stochastic Gradient Descent
 
 ```
-Results on Training Data 1,000,000 steps
-errors: 695/60000 = 1.1583332903683186%
-accuracy: 98.8%
-
-Results on Training Data 2,000,000 steps
-errors: 475/60000 = 0.7916666567325592%
-accuracy: 99.2%
+train errors: 673
+train error %: 1.1216666549444199%
+train accuracy %: 98.87833334505558%
+test errors: 259
+test error %: 2.590000070631504%
+test accuracy %: 97.4099999293685%
 ```
 
 # Misc Features

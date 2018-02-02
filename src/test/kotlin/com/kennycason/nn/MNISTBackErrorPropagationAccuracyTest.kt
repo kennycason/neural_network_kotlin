@@ -31,13 +31,13 @@ object MNISTBackErrorPropagationAccuracyTest {
                 learningRate = 0.15f,
                 layerSizes = arrayOf(
                         28 * 28, // 784
-                        300,
+                        350,
                         10),
                 hiddenActivation = Functions.Sigmoid,
                 outputActivation = Functions.Sigmoid,
                 log = false)
 
-        (0..100).forEach { i ->
+        (0..1000).forEach { i ->
             println("batch $i")
             nn.learn(xs = xs, ys = labelVectors, steps = 1000)
 
@@ -46,7 +46,6 @@ object MNISTBackErrorPropagationAccuracyTest {
                 analyzeResults(nn, testXs, testLabels, "test")
             }
         }
-
     }
 
     private fun analyzeResults(nn: BackpropagationNeuralNetwork, xs: List<FloatMatrix>, labels: List<Int>, name: String) {
@@ -60,9 +59,9 @@ object MNISTBackErrorPropagationAccuracyTest {
             }
         }
         val error = errors.toFloat() / labels.size * 100.0
-        println("errors: $errors")
-        println("error %: $error%")
-        println("accuracy %: ${100.0 - error}%")
+        println("$name errors: $errors")
+        println("$name error %: $error%")
+        println("$name accuracy %: ${100.0 - error}%")
     }
 
     private fun selectClass(label: FloatMatrix): Int {

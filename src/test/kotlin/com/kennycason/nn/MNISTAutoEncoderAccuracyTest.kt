@@ -16,7 +16,7 @@ import java.util.*
 fun main(args: Array<String>) {
     //MNISTAutoEncoderAccuracyTest.Experiment1.run()
     //MNISTAutoEncoderAccuracyTest.Experiment2.run()
-    MNISTAutoEncoderAccuracyTest.Experiment3.run()
+      MNISTAutoEncoderAccuracyTest.Experiment3.run()
 }
 
 object MNISTAutoEncoderAccuracyTest {
@@ -35,10 +35,9 @@ object MNISTAutoEncoderAccuracyTest {
           val xs = MNISTDataLoader.loadIdx3("/data/mnist/train-images-idx3-ubyte").subList(0, n)
           val labels = MNISTDataLoader.loadIdx1("/data/mnist/train-labels-idx1-ubyte").subList(0, n)
 
-
           val labelVectors = buildLabelVectors(labels)
           val nn = BackpropagationNeuralNetwork(
-                  learningRate = 0.1f,
+                  learningRate = 0.15f,
                   layerSizes = arrayOf(
                           28 * 28, // 784
                           300,
@@ -50,19 +49,22 @@ object MNISTAutoEncoderAccuracyTest {
           (0..1000).forEach { i ->
               println("batch $i")
               nn.learn(xs = xs, ys = labelVectors, steps = 1000)
-          }
 
-          var errors = 0
-          (0 until n).map { i ->
-              val targetLabel = labels[i]
-              val y = nn.feedForward(xs[i])
-              val estimatedLabel = selectClass(y)
-              if (estimatedLabel != targetLabel) {
-                  errors++
+              if (i > 0 && i % 10 == 0) {
+                  var errors = 0
+                  (0 until n).map { i ->
+                      val targetLabel = labels[i]
+                      val y = nn.feedForward(xs[i])
+                      val estimatedLabel = selectClass(y)
+                      if (estimatedLabel != targetLabel) {
+                          errors++
+                      }
+                  }
+                  println("errors: $errors")
+                  println("error %: ${(errors.toDouble() / labels.size) * 100.0}%")
               }
           }
-          println("errors: $errors")
-          println("error %: ${errors.toFloat() / labels.size * 100.0}%")
+
       }
   }
 
