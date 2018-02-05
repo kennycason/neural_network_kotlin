@@ -1,6 +1,7 @@
 package com.kennycason.nn
 
 import com.kennycason.nn.convolution.MatrixRegions
+import com.kennycason.nn.learning_rate.LearningRate
 import com.kennycason.nn.math.Errors
 import org.jblas.FloatMatrix
 

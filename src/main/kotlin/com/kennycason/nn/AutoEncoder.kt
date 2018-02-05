@@ -1,17 +1,18 @@
 package com.kennycason.nn
 
+import com.kennycason.nn.learning_rate.FixedLearningRate
+import com.kennycason.nn.learning_rate.LearningRate
 import com.kennycason.nn.math.ActivationFunction
 import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
 import java.util.*
 
-class AutoEncoder(visibleSize: Int,
-                  hiddenSize: Int,
-                  private val learningRate: Float = 0.1f,
+class AutoEncoder(var visibleSize: Int,
+                  var hiddenSize: Int,
+                  var learningRate: LearningRate = FixedLearningRate(),
                   private val hiddenActivation: ActivationFunction = Functions.Sigmoid,
                   private val visibleActivation: ActivationFunction = Functions.Sigmoid,
-                  private val acktivation: ActivationFunction = Functions.Sigmoid,
                   private val log: Boolean = true) : AbstractAutoEncoder() {
 
     private val random = Random()
@@ -60,7 +61,7 @@ class AutoEncoder(visibleSize: Int,
             val yErrors = x
                     .sub(y)
                     .mul(y.apply(visibleActivation::df)) // error delta * derivative of hiddenActivation function (sigmoid factored out)
-                    .mul(learningRate)
+                    .mul(learningRate.get())
 
             val decodeGradients = feature.transpose().mmul(yErrors)
             decode.addi(decodeGradients) // update weights

@@ -1,6 +1,7 @@
 package com.kennycason.nn
 
 import com.kennycason.nn.data.image.*
+import com.kennycason.nn.learning_rate.FixedLearningRate
 import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
@@ -15,7 +16,7 @@ class BackpropagationNeuralNetworkTest {
         val y = FloatMatrix(listOf(0.62f)) // a random target variable
 
         val layer = BackpropagationNeuralNetwork(
-                learningRate = 0.5f,
+                learningRate = FixedLearningRate(0.5f),
                 layerSizes = arrayOf(2, 1),
                 log = false)
 
@@ -53,7 +54,7 @@ class BackpropagationNeuralNetworkTest {
         )
 
         val layer = BackpropagationNeuralNetwork(
-                learningRate = 0.1f,
+                learningRate = FixedLearningRate(),
                 layerSizes = arrayOf(2, 3, 1),
                 log = false)
 
@@ -97,7 +98,7 @@ class BackpropagationNeuralNetworkTest {
         )
 
         val layer = BackpropagationNeuralNetwork(
-                learningRate = 0.3f,
+                learningRate = FixedLearningRate(0.3f),
                 layerSizes = arrayOf(2, 10, 1),
                 log = false)
 
@@ -147,7 +148,7 @@ class BackpropagationNeuralNetworkTest {
         )
 
         val layer = BackpropagationNeuralNetwork(
-                learningRate = 0.1f,
+                learningRate = FixedLearningRate(0.1f),
                 hiddenActivation = Functions.Sigmoid,
                 outputActivation = Functions.Sigmoid,
                 layerSizes = arrayOf(

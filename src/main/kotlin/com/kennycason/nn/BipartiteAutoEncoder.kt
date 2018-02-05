@@ -11,9 +11,9 @@ import java.util.*
  *
  * In progress, do not use
  */
-class BipartiteAutoEncoder(visibleSize: Int,
-                           hiddenSize: Int,
-                           private val learningRate: Float = 0.1f,
+class BipartiteAutoEncoder(var visibleSize: Int,
+                           var hiddenSize: Int,
+                           var learningRate: Float = 0.1f,
                            private val activation: ActivationFunction = Functions.Sigmoid,
                            private val log: Boolean = true) : AbstractAutoEncoder() {
 

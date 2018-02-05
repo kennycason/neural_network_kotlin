@@ -1,5 +1,7 @@
 package com.kennycason.nn.convolution
 
+import com.kennycason.nn.learning_rate.FixedLearningRate
+import com.kennycason.nn.learning_rate.LearningRate
 import com.kennycason.nn.math.ActivationFunction
 import com.kennycason.nn.math.Functions
 
@@ -19,14 +21,15 @@ object ConvolutedAutoEncoderFactory {
                                       minHiddenDim: Int = 10,
                                       visibleActivation: ActivationFunction = Functions.Sigmoid,
                                       hiddenActivation: ActivationFunction = Functions.Sigmoid,
-                                      learningRate: Float = 0.1f): DeepConvolutedAutoEncoder {
+                                      learningRate: LearningRate = FixedLearningRate(),
+                                      log: Boolean = false): DeepConvolutedAutoEncoder {
         val layerDimensions = generateDimensions(initialVisibleDim, layers, minHiddenDim)
 
         println(layerDimensions.joinToString(",\n"))
 
         val layers = layerDimensions.map { dim ->
             ConvolutedAutoEncoder(visibleDim = dim.visibleDim,
-                    paritions = dim.partitions,
+                    partitions = dim.partitions,
                     hiddenDim = dim.hiddenDim,
                     learningRate = learningRate,
                     visibleActivation = visibleActivation,
@@ -34,7 +37,7 @@ object ConvolutedAutoEncoderFactory {
                     log = false)
         }.toTypedArray()
 
-        return DeepConvolutedAutoEncoder(layers)
+        return DeepConvolutedAutoEncoder(layers = layers, log = log)
     }
 
     fun generateDimensions(initialVisibleDim: Dim,

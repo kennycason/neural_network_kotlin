@@ -1,9 +1,10 @@
 package com.kennycason.nn
 
+import com.kennycason.nn.learning_rate.FixedLearningRate
+import com.kennycason.nn.learning_rate.LearningRate
 import com.kennycason.nn.math.ActivationFunction
 import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
-import com.sun.org.apache.xalan.internal.utils.FeatureManager
 import org.jblas.FloatMatrix
 import java.util.*
 
@@ -11,7 +12,7 @@ import java.util.*
  * An implementation of a multi-layer neural network trained via back-error propagation
  */
 class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
-                                   private val learningRate: Float = 0.1f,
+                                   var learningRate: LearningRate = FixedLearningRate(),
                                    private val hiddenActivation: ActivationFunction = Functions.Sigmoid,
                                    private val outputActivation: ActivationFunction = Functions.Sigmoid,
                                    private val log: Boolean = true) {
@@ -81,7 +82,7 @@ class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
             val yError = y.sub(yEstimated)
             val yDelta = yError
                     .mul(yEstimated.apply(outputActivation::df)) // error delta * derivative of activation function (sigmoid factored out)
-                    .mul(learningRate)
+                    .mul(learningRate.get())
 
             val contributingOutput = intermediateFeatures[intermediateFeatures.size - 2]
             val errorGradients = contributingOutput.transpose().mmul(yDelta)

@@ -4,8 +4,10 @@ import com.kennycason.nn.data.PrintUtils
 import com.kennycason.nn.data.image.CompositeImageWriter
 import com.kennycason.nn.data.image.MNISTDataLoader
 import com.kennycason.nn.data.image.MatrixGrayScaleImageDecoder
+import com.kennycason.nn.learning_rate.FixedLearningRate
 import com.kennycason.nn.math.Errors
 import org.jblas.FloatMatrix
+import org.junit.Assert
 import org.junit.Test
 import java.io.File
 import java.util.*
@@ -19,7 +21,7 @@ class MNISTAutoEncoderTest {
         val visibleSize = 28 * 28
         val hiddenSize = (visibleSize * 0.75).toInt()
         val layer = AutoEncoder(
-                learningRate = 0.1f,
+                learningRate = FixedLearningRate(),
                 visibleSize = visibleSize,
                 hiddenSize = hiddenSize,
                 log = false)
@@ -30,8 +32,8 @@ class MNISTAutoEncoderTest {
             val x = xs.get(rand.nextInt(xs.size))
             layer.learn(x, 1)
 
-            val error = Errors.compute(x, layer.feedForward(x))
             if (i % 25 == 0) {
+                val error = Errors.compute(x, layer.feedForward(x))
                 println("$i -> error: $error")
             }
 
@@ -55,7 +57,8 @@ class MNISTAutoEncoderTest {
             }
             errorSum += error
         }
-        println("total error: " + (errorSum / (xs.size)))
+        val totalError = errorSum / xs.size
+        println("total error: $totalError")
 
         // write to composite image
         val image = CompositeImageWriter.write(
@@ -73,6 +76,10 @@ class MNISTAutoEncoderTest {
                         "decode:\n" +
                         layer.decode.toString("%f", "[", "]", ", ", "\n") + "\n"
         )
+
+        // relatively high error, but a safe check to confirm convergence.
+        // will typically fall in 3-5% range which renders very nice outputs
+        Assert.assertTrue(totalError < 10.0)
 
     }
 

@@ -2,6 +2,7 @@ package com.kennycason.nn.convolution
 
 import com.kennycason.nn.AbstractAutoEncoder
 import com.kennycason.nn.AutoEncoder
+import com.kennycason.nn.learning_rate.LearningRate
 import com.kennycason.nn.math.ActivationFunction
 import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
@@ -10,20 +11,20 @@ import java.util.*
 import java.util.concurrent.*
 
 
-class ConvolutedAutoEncoder(private val visibleDim: Dim,
-                            private val hiddenDim: Dim,
-                            private val paritions: Dim,
-                            private val learningRate: Float,
+class ConvolutedAutoEncoder(val visibleDim: Dim,
+                            val hiddenDim: Dim,
+                            partitions: Dim,
+                            var learningRate: LearningRate, // TODO each convoluted network should have a unique learningRate instance
                             private val visibleActivation: ActivationFunction = Functions.Sigmoid,
                             private val hiddenActivation: ActivationFunction = Functions.Sigmoid,
                             private val log: Boolean,
                             private val distributed: Boolean = false) : AbstractAutoEncoder() {
 
     private val random = Random()
-    private val visibleChunkRows = visibleDim.rows / paritions.rows
-    private val visibleChunkCols = visibleDim.cols / paritions.cols
-    private val hiddenChunkRows = hiddenDim.rows / paritions.rows
-    private val hiddenChunkCols = hiddenDim.cols / paritions.cols
+    private val visibleChunkRows = visibleDim.rows / partitions.rows
+    private val visibleChunkCols = visibleDim.cols / partitions.cols
+    private val hiddenChunkRows = hiddenDim.rows / partitions.rows
+    private val hiddenChunkCols = hiddenDim.cols / partitions.cols
 
     init {
         if (visibleDim.rows % visibleChunkRows != 0) {

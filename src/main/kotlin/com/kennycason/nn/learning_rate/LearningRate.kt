@@ -2,5 +2,5 @@ package com.kennycason.nn.learning_rate
 
 
 interface LearningRate {
-    fun apply(): Float
+    fun get(): Float
 }

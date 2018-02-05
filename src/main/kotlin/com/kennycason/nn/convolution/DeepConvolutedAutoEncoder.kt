@@ -30,7 +30,6 @@ class DeepConvolutedAutoEncoder(private val layers: Array<ConvolutedAutoEncoder>
             }
             // pass encoded features to next layer
             currentFeatures = currentFeatures.map { f -> layer.encode(f) }
-            println(currentFeatures.first().columns)
         }
     }
 

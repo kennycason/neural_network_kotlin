@@ -1,5 +1,7 @@
 package com.kennycason.nn
 
+import com.kennycason.nn.learning_rate.FixedLearningRate
+import com.kennycason.nn.learning_rate.LearningRate
 import com.kennycason.nn.math.ActivationFunction
 import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
@@ -10,8 +12,7 @@ import java.util.*
  * A generic deep auto encoder.
  * Can add both AutoEncoder or ConvolutedAutoEncoder layers
  */
-class DeepAutoEncoder(private val layers: Array<AbstractAutoEncoder>,
-                      private val learningRate: Float = 0.1f,
+class DeepAutoEncoder(val layers: Array<AbstractAutoEncoder>,
                       private val visibleActivation: ActivationFunction = Functions.Sigmoid,
                       private val hiddenActivation: ActivationFunction = Functions.Sigmoid,
                       private val log: Boolean = false) {
@@ -19,7 +20,7 @@ class DeepAutoEncoder(private val layers: Array<AbstractAutoEncoder>,
     private val random = Random()
 
     constructor(layerDimensions: Array<Array<Int>>,
-                learningRate: Float = 0.1f,
+                learningRate: LearningRate = FixedLearningRate(),
                 visibleActivation: ActivationFunction = Functions.Sigmoid,
                 hiddenActivation: ActivationFunction = Functions.Sigmoid,
                 log: Boolean = false
@@ -35,7 +36,6 @@ class DeepAutoEncoder(private val layers: Array<AbstractAutoEncoder>,
                                 hiddenActivation = hiddenActivation,
                                 log = log)
                     }),
-            learningRate = learningRate,
             log = log
     )
 

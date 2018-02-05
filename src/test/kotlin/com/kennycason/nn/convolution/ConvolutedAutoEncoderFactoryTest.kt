@@ -9,7 +9,7 @@ class ConvolutedAutoEncoderFactoryTest {
     fun layerDimensions() {
         val layerDimensions = ConvolutedAutoEncoderFactory.generateDimensions(
                 initialVisibleDim = Dim(480, 640),
-                layers = 20)
+                layers = 10)
 
         println(layerDimensions.joinToString(",\n"))
     }
@@ -18,7 +18,7 @@ class ConvolutedAutoEncoderFactoryTest {
     fun convolutedAutoEncoder() {
         ConvolutedAutoEncoderFactory.generateConvolutedAutoencoder(
                 initialVisibleDim = Dim(480, 640),
-                layers = 20)
+                layers = 10)
     }
 
 }

@@ -12,6 +12,7 @@ class VoterDataLoaderTest {
         // first row
         // n,n,y,y,y,y,n,n,y,y,n,y,y,y,n,y,republican
         val x = labeledData.xs.getRow(0)
+
         Assert.assertEquals(0.0f, x[0])
         Assert.assertEquals(0.0f, x[1])
         Assert.assertEquals(1.0f, x[2])

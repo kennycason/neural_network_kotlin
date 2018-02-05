@@ -156,4 +156,6 @@ You can also batch up groups and average in code.
 
 - Converting everything from Double to Float was an instant 1.5x speedup. I don't suspect the GPU is actually being used and that is a pure Java speedup.
 
-- I also don't recommend running running `mvn test` as unfortunately most of my code's entry points are via `@Test` annotations. :)
+- To run unit tests, run `mvn test` (This will take a few minutes). 
+
+- Note that files ending in Demo.kt may have @Test annotations, they are to conveniently launch the programs and not part of the unit test suite.

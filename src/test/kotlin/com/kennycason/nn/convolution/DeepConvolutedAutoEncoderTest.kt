@@ -1,10 +1,12 @@
 package com.kennycason.nn.convolution
 
 import com.kennycason.nn.data.image.*
+import com.kennycason.nn.learning_rate.FixedLearningRate
 import com.kennycason.nn.math.Errors
-import com.kennycason.nn.math.Functions
+import com.kennycason.nn.util.time
 import org.jblas.FloatMatrix
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 
 
@@ -12,7 +14,7 @@ class DeepConvolutedAutoEncoderTest {
 
     @Test
     fun ninjaTurdle() {
-        val image = Image("/data/ninja.png")
+        val image = Image("/data/image/ninja.png")
         val imageData = MatrixRGBImageEncoder().encode(image)
         // 32 x 24
         // encode layer 2304 x 1728,
@@ -24,28 +26,28 @@ class DeepConvolutedAutoEncoderTest {
         val layer = ConvolutedAutoEncoderFactory.generateConvolutedAutoencoder(
                 initialVisibleDim = Dim(rows = 32 * 3, cols = 24),
                 layers = 3,
-                learningRate = 0.1f
+                learningRate = FixedLearningRate()
         )
 
-        val start = System.currentTimeMillis()
-        (0.. 250).forEach { i ->
-            layer.learn(listOf(imageData), 10)
-            println("${System.currentTimeMillis() - start}ms")
+        time({
+            (0..250).forEach { i ->
+                layer.learn(listOf(imageData), 10)
 
-            val visual = layer.feedForward(imageData)
-            val outImage = MatrixRGBImageDecoder(rows = height).decode(visual)
-            outImage.save("/tmp/output_ninja_$i.png")
-        }
+                val visual = layer.feedForward(imageData)
+                val outImage = MatrixRGBImageDecoder(rows = height).decode(visual)
+                outImage.save("/tmp/output_ninja_$i.png")
+            }
+        })
 
         val error = Errors.compute(imageData, layer.feedForward(imageData))
 
         println("error -> $error")
-        Assert.assertTrue(error < 3.0)
+        Assert.assertTrue(error < 3.0) // typically around 1.5, so this may non-deterministically fail
     }
 
     @Test
     fun jet() {
-        val image = Image("/data/fighter_jet_small.jpg")
+        val image = Image("/data/image/fighter_jet_small.jpg")
         val imageData = MatrixRGBImageEncoder().encode(image)
         // 100 x 63
         // encode layer 300 x 63,
@@ -56,28 +58,35 @@ class DeepConvolutedAutoEncoderTest {
         val layer = ConvolutedAutoEncoderFactory.generateConvolutedAutoencoder(
                 initialVisibleDim = Dim(rows = 100 * 3, cols = 63),
                 layers = 3,
-                learningRate = 0.1f
+                learningRate = FixedLearningRate(),
+                log = false
         )
 
-        val start = System.currentTimeMillis()
-        var j = 1
-        (0.. 10_000).forEach { i ->
-            layer.learn(listOf(imageData), 1)
-            println("${System.currentTimeMillis() - start}ms")
+        time({
+            (0..500).forEach { i ->
+                layer.learn(listOf(imageData), 10)
 
-            if (i > j) {
                 val visual = layer.feedForward(imageData)
                 val outImage = MatrixRGBImageDecoder(rows = height).decode(visual)
-                outImage.save("/tmp/output_jet_$i.png")
-                j *= 2
+
+                if (i % 10 == 0) {
+                    outImage.save("/tmp/output_jet_$i.png")
+                }
+
+                val error = Errors.compute(imageData, layer.feedForward(imageData))
+                println("error -> $error")
             }
-        }
+        })
+
+        val error = Errors.compute(imageData, layer.feedForward(imageData))
+        println("error -> $error")
+        Assert.assertTrue(error < 3.0) // typically around 1.5
     }
 
-    @Test
+    @Ignore
     fun pokemon() {
         val xs = CompositeImageReader.read(
-                file = "/data/pokemon_151_dark_bg.png",
+                file = "/data/image/pokemon_151_dark_bg.png",
                 matrixImageEncoder = MatrixRGBImageEncoder(),
                 rows = 11,
                 cols = 15,
@@ -90,56 +99,56 @@ class DeepConvolutedAutoEncoderTest {
 //        val layer = ConvolutedAutoEncoderFactory.generateConvolutedAutoencoder(
 //                initialVisibleDim = Dim(rows = 60 * 3, cols = 60),
 //                layers = 5,
-//                learningRate = 0.01f
+//                learningRate = FixedLearningRate()
 //        )
 
         val layer1 = ConvolutedAutoEncoder(
                 visibleDim = Dim(60 * 3, 60),
                 hiddenDim = Dim(360, 120),
-                paritions = Dim(60, 60),
-                learningRate = 0.1f,
+                partitions = Dim(60, 60),
+                learningRate = FixedLearningRate(),
                 log = false
         )
         val layer2 = ConvolutedAutoEncoder(
                 visibleDim = Dim(360, 120),
                 hiddenDim = Dim(180, 120),
-                paritions = Dim(30, 30),
-                learningRate = 0.1f,
+                partitions = Dim(30, 30),
+                learningRate = FixedLearningRate(),
                 log = false
         )
         val layer3 = ConvolutedAutoEncoder(
                 visibleDim = Dim(180, 120),
                 hiddenDim = Dim(120, 60),
-                paritions = Dim(20, 20),
-                learningRate = 0.1f,
+                partitions = Dim(20, 20),
+                learningRate = FixedLearningRate(),
                 log = false
         )
         val layer4 = ConvolutedAutoEncoder(
                 visibleDim = Dim(120, 60),
                 hiddenDim = Dim(60, 30),
-                paritions = Dim(10, 10),
-                learningRate = 0.1f,
+                partitions = Dim(10, 10),
+                learningRate = FixedLearningRate(),
                 log = false
         )
 //        val layer5 = ConvolutedLayer(
 //                visibleDim = Dim(80, 60),
 //                hiddenDim = Dim(40, 40),
 //                paritions = Dim(20, 20),
-//                learningRate = 0.1f,
+//                learningRate = FixedLearningRate(),
 //                log = false
 //        )
 //        val layer6 = ConvolutedLayer(
 //                visibleDim = Dim(40, 40),
 //                hiddenDim = Dim(20, 20),
 //                paritions = Dim(10, 10),
-//                learningRate = 0.1f,
+//                learningRate = FixedLearningRate(),
 //                log = false
 //        )
 //        val layer7 = ConvolutedLayer(
 //                visibleDim = Dim(20, 20),
 //                hiddenDim = Dim(1, 1),
 //                paritions = Dim(1, 1),
-//                learningRate = 0.1f,
+//                learningRate = FixedLearningRate(),
 //                log = false
 //        )
 

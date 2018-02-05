@@ -1,6 +1,7 @@
 package com.kennycason.nn.data.image
 
 import com.kennycason.nn.data.PrintUtils
+import org.junit.Assert
 import org.junit.Test
 
 
@@ -36,11 +37,19 @@ class MNISTDataLoaderTest {
 
     @Test
     fun loadIdx1() {
-        val labeels = MNISTDataLoader.loadIdx1("/data/mnist/train-labels-idx1-ubyte")
+        val labels = MNISTDataLoader.loadIdx1("/data/mnist/train-labels-idx1-ubyte")
 
-        println("loaded ${labeels.size} samples")
+        println("loaded ${labels.size} samples")
         (0 until 50).forEach { i ->
-            println(labeels.get(i))
+            println(labels.get(i))
         }
+
+        Assert.assertEquals(5, labels.get(0))
+        Assert.assertEquals(0, labels.get(1))
+        Assert.assertEquals(4, labels.get(2))
+        Assert.assertEquals(1, labels.get(3))
+        Assert.assertEquals(9, labels.get(4))
+        Assert.assertEquals(2, labels.get(5))
     }
+
 }

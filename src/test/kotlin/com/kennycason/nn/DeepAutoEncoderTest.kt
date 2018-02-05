@@ -1,5 +1,6 @@
 package com.kennycason.nn
 
+import com.kennycason.nn.learning_rate.FixedLearningRate
 import com.kennycason.nn.math.Errors
 import org.jblas.FloatMatrix
 import org.junit.Assert
@@ -20,7 +21,7 @@ class DeepAutoEncoderTest {
                         arrayOf(50, 25),
                         arrayOf(25, 10)
                 ),
-                learningRate = 0.1f,
+                learningRate = FixedLearningRate(),
                 log = true)
         layer.learn(xs = xs, steps = 10_000)
 
@@ -54,7 +55,7 @@ class DeepAutoEncoderTest {
                         arrayOf((vectorSize * 1.00).toInt(), (vectorSize * 0.50).toInt())//,
                        // arrayOf((vectorSize * 0.25).toInt(), (vectorSize * 0.10).toInt())
                 ),
-                learningRate = 0.1f,
+                learningRate = FixedLearningRate(),
                 log = true)
 
         // train

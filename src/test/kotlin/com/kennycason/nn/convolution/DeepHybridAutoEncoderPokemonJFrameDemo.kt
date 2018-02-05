@@ -4,7 +4,9 @@ import com.kennycason.nn.AbstractAutoEncoder
 import com.kennycason.nn.AutoEncoder
 import com.kennycason.nn.DeepAutoEncoder
 import com.kennycason.nn.data.image.*
+import com.kennycason.nn.learning_rate.FixedLearningRate
 import org.jblas.FloatMatrix
+import org.junit.Test
 
 import java.awt.Graphics
 import java.util.*
@@ -21,82 +23,82 @@ import javax.swing.WindowConstants
  * Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
  */
 
-fun main(args: Array<String>) {
-    DeepHybridConvolutedAutoEncoderPokemonJFrameDemo().run()
-}
 
 class DeepHybridConvolutedAutoEncoderPokemonJFrameDemo {
-    val random = Random()
-    val screenWidth = 920
-    val screenHeight = 660
-    val saveImage = false
 
-    val xs = CompositeImageReader.read(
-            file = "/data/pokemon_151_dark_bg.png",
-            matrixImageEncoder = MatrixRGBImageEncoder(),
-            rows = 11,
-            cols = 15,
-            n = 151)
+    @Test
+    fun run() {
+        val random = Random()
+        val screenWidth = 920
+        val screenHeight = 660
+        val saveImage = false
 
-    val layer1 = ConvolutedAutoEncoder(
-            visibleDim = Dim(60 * 3, 60),
-            hiddenDim = Dim(360, 120),
-            paritions = Dim(60, 60),
-            learningRate = 0.1f,
-            log = false
-    )
-    val layer2 = ConvolutedAutoEncoder(
-            visibleDim = Dim(360, 120),
-            hiddenDim = Dim(180, 120),
-            paritions = Dim(30, 30),
-            learningRate = 0.1f,
-            log = false
-    )
-    val layer3 = ConvolutedAutoEncoder(
-            visibleDim = Dim(180, 120),
-            hiddenDim = Dim(120, 60),
-            paritions = Dim(20, 20),
-            learningRate = 0.1f,
-            log = false
-    )
-    //    val layer3 = AutoEncoder(
+        val xs = CompositeImageReader.read(
+                file = "/data/image/pokemon_151_dark_bg.png",
+                matrixImageEncoder = MatrixRGBImageEncoder(),
+                rows = 11,
+                cols = 15,
+                n = 151)
+
+        val layer1 = ConvolutedAutoEncoder(
+                visibleDim = Dim(60 * 3, 60),
+                hiddenDim = Dim(360, 120),
+                partitions = Dim(60, 60),
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val layer2 = ConvolutedAutoEncoder(
+                visibleDim = Dim(360, 120),
+                hiddenDim = Dim(180, 120),
+                partitions = Dim(30, 30),
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val layer3 = ConvolutedAutoEncoder(
+                visibleDim = Dim(180, 120),
+                hiddenDim = Dim(120, 60),
+                partitions = Dim(20, 20),
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        //    val layer3 = AutoEncoder(
 //            visibleSize = 180 * 120,
 //            hiddenSize = 60 * 60,
-//            learningRate = 0.1f,
+//            learningRate = FixedLearningRate(),
 //            log = false
 //    )
-    val layer4 = ConvolutedAutoEncoder(
-            visibleDim = Dim(120, 60),
-            hiddenDim = Dim(60, 30),
-            paritions = Dim(10, 10),
-            learningRate = 0.1f,
-            log = false
-    )
+        val layer4 = ConvolutedAutoEncoder(
+                visibleDim = Dim(120, 60),
+                hiddenDim = Dim(60, 30),
+                partitions = Dim(10, 10),
+                learningRate = FixedLearningRate(),
+                log = false
+        )
 
-    //    val layer5 = ConvolutedAutoEncoder(
+        //    val layer5 = ConvolutedAutoEncoder(
 //            visibleDim = Dim(120, 60),
 //            hiddenDim = Dim(60, 30),
 //            paritions = Dim(10, 10),
-//            learningRate = 0.1f,
+//            learningRate = FixedLearningRate(),
 //            log = false
 //    )
-    val layer5 = AutoEncoder(
-            visibleSize = 60 * 30,
-            hiddenSize = 100,
-            learningRate = 0.1f,
-            log = false
-    )
+        val layer5 = AutoEncoder(
+                visibleSize = 60 * 30,
+                hiddenSize = 100,
+                learningRate = FixedLearningRate(),
+                log = false
+        )
 
 
-    val layer = DeepAutoEncoder(
-            layers = arrayOf<AbstractAutoEncoder>(
-                    layer1, layer2/*, layer3, layer4, layer5, layer6*/),
-            log = true)
+        val layer = DeepAutoEncoder(
+                layers = arrayOf<AbstractAutoEncoder>(
+                        layer1, layer2/*, layer3, layer4, layer5, layer6*/),
+                log = true)
 
-    var i = 0
-    val m = 0
-    val n = 151
-    fun run() {
+        var i = 0
+        val m = 0
+        val n = 151
+
         val frame = JFrame()
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
         frame.setSize(screenWidth, screenHeight)
