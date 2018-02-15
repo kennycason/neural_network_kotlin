@@ -20,8 +20,8 @@ object Functions {
     }
 
     object LeakyRelU : ActivationFunction {
-        override fun f(x: Float) = Math.max(0.01f, x)
-        override fun df(x: Float) = if (x <= 0f) { 0.01f } else { 1f }
+        override fun f(x: Float) = Math.max(0.1f, x)
+        override fun df(x: Float) = if (x <= 0f) { 0.1f } else { 1f }
     }
 
     object Tanh : ActivationFunction {
