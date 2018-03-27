@@ -86,26 +86,31 @@ The idea is that pixels closer to each other are likely more immediately related
 Additionally, it helps that this also results in smaller matrices which means faster computation and potential parellization.
 Note that extra work was done to ensure spatial relations when processing 2d data is preserved when splitting/merging data between convolution layers.
 
-Learning of a single small image.
+### Learning of a single small image
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_jet.gif" width="300px"/>
 
-Learning a batch of Pokemon Images. 
+### Learning a batch of Pokemon Images
+
 This may just be an illusion, but I find it interesting that the network appears to be learning the shape and structure before color. 
 Note, I'm using a small network and a low number of training cycles. With more training this image will become more clear.
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon.png" /> <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon.gif" />
 
-Learning all 151 pokemon images. Note that the color model hasn't been fully learned. Also there are some strange clipping/white spots.
+### Learning all 151 pokemon images
+
+Note that the color model hasn't been fully learned. Also there are some strange clipping/white spots.
 These are largely due to editing issues with the training image on my part. :)
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon_151.png" width="400px" /> <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/deep_convoluted_auto_encoder_pokemon_151.gif" width="400px"/>
+
+### Webcam Learning
 
 The next fun thing to do with an Autoencoder is to hook it up to your webcam and have it watch and learn you and your sorroundings.
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/webcam_grayscale.png" width="400px" /> <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/webcam_color_recursive.png" width="400px"/>
 
-Two videos showing the first view steps of webcam learning.
+Three videos showing the first steps of webcam learning.
 
 - grayscale part 1: https://v.usetapes.com/LYwFNwMYln
 - grayscale part 2: https://v.usetapes.com/wjRufz5gA2
