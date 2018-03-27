@@ -8,7 +8,6 @@
 bin
 /target
 */target/*
-*.log
 .idea/*
 *.iml
 dependency-reduced-pom.xml
