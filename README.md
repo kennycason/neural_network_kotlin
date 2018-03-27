@@ -110,6 +110,9 @@ The next fun thing to do with an Autoencoder is to hook it up to your webcam and
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/webcam_grayscale.png" width="400px" /> <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/webcam_color_recursive.png" width="400px"/>
 
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/webcam_color_friends1.png" width="400px" /> <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/webcam_color_friends2.png" width="400px"/>
+
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/webcam_color_friends3.png" width="400px" />
 Three videos showing the first steps of webcam learning.
 
 - grayscale part 1: https://v.usetapes.com/LYwFNwMYln
