@@ -106,7 +106,7 @@ These are largely due to editing issues with the training image on my part. :)
 
 ### Webcam Learning
 
-The next fun thing to do with an Autoencoder is to hook it up to your webcam and have it watch and learn you and your sorroundings.
+The next fun thing to do with an Autoencoder is to hook it up to your webcam and have it watch and learn you and your sorroundings. Code found [here](https://github.com/kennycason/neural_network_kotlin/blob/master/src/test/kotlin/WebCamContinuousLearnDemo.kt)
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/webcam_grayscale.png" width="400px" /> <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/webcam_color_recursive.png" width="400px"/>
 
