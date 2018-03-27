@@ -26,7 +26,7 @@ object MNISTBackErrorPropagationAccuracyDemo {
         val testLabels = MNISTDataLoader.loadIdx1("/data/mnist/t10k-labels-idx1-ubyte")
 
         val labelVectors = buildLabelVectors(labels)
-        val nn = BackpropagationNeuralNetwork(
+        val nn = NeuralNetwork(
                 learningRate = FixedLearningRate(0.15f),
                 layerSizes = arrayOf(
                         28 * 28, // 784
@@ -47,7 +47,7 @@ object MNISTBackErrorPropagationAccuracyDemo {
         }
     }
 
-    private fun analyzeResults(nn: BackpropagationNeuralNetwork, xs: List<FloatMatrix>, labels: List<Int>, name: String) {
+    private fun analyzeResults(nn: NeuralNetwork, xs: List<FloatMatrix>, labels: List<Int>, name: String) {
         var errors = 0
         (0 until labels.size).map { i ->
             val targetLabel = labels[i]

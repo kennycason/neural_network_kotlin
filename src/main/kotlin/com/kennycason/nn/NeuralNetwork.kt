@@ -11,11 +11,11 @@ import java.util.*
 /**
  * An implementation of a multi-layer neural network trained via back-error propagation
  */
-class BackpropagationNeuralNetwork(layerSizes: Array<Int>,
-                                   var learningRate: LearningRate = FixedLearningRate(),
-                                   private val hiddenActivation: ActivationFunction = Functions.Sigmoid,
-                                   private val outputActivation: ActivationFunction = Functions.Sigmoid,
-                                   private val log: Boolean = true) {
+class NeuralNetwork(layerSizes: Array<Int>,
+                    var learningRate: LearningRate = FixedLearningRate(),
+                    private val hiddenActivation: ActivationFunction = Functions.Sigmoid,
+                    private val outputActivation: ActivationFunction = Functions.Sigmoid,
+                    private val log: Boolean = true) {
 
     private val inputSize: Int
     private val outputSize: Int

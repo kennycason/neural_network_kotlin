@@ -35,7 +35,7 @@ class PokemonAutoEncoderAccuracyDemo {
 
 
         val features = xs.map { x -> autoEncoder.encode(x) }
-        val nn = BackpropagationNeuralNetwork(
+        val nn = NeuralNetwork(
                 learningRate = FixedLearningRate(),
                 layerSizes = arrayOf(
                         features.first().columns,

@@ -5,7 +5,6 @@ import com.kennycason.nn.convolution.Dim
 import com.kennycason.nn.data.image.MNISTDataLoader
 import com.kennycason.nn.learning_rate.FixedLearningRate
 import com.kennycason.nn.math.Errors
-import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
 import org.junit.Test
 
@@ -48,8 +47,8 @@ object MNISTAutoEncoderAccuracyDemo {
             println("error %: ${errors.toFloat() / labels.size * 100.0}%")
         }
 
-        private fun trainBackPropNeuralNetwork(labels: List<FloatMatrix>, features: List<FloatMatrix>): BackpropagationNeuralNetwork {
-            val nn = BackpropagationNeuralNetwork(
+        private fun trainBackPropNeuralNetwork(labels: List<FloatMatrix>, features: List<FloatMatrix>): NeuralNetwork {
+            val nn = NeuralNetwork(
                     learningRate = FixedLearningRate(0.05f),
                     layerSizes = arrayOf(
                             features.first().columns,

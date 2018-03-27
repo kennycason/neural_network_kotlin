@@ -10,10 +10,13 @@ class MatrixNBitImageEncoder(private val bits: Int = 24) : MatrixImageEncoder {
     private val HIGH_BIT_FLAG = 8388608
 
     override fun encode(image: Image): FloatMatrix {
-        val data = FloatMatrix(1, image.width() * bits * image.height())
-        val bi = image.data()
-        for (y in 0 until image.height()) {
-            for (x in 0 until image.width()) {
+        return encode(image.data())
+    }
+
+    override fun encode(bi: BufferedImage): FloatMatrix {
+        val data = FloatMatrix(1, bi.width * bits * bi.height)
+        for (y in 0 until bi.height) {
+            for (x in 0 until bi.width) {
                 read(data, bi, x, y)
             }
         }

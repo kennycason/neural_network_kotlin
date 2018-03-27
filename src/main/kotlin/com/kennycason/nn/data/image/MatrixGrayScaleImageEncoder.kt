@@ -1,15 +1,19 @@
 package com.kennycason.nn.data.image
 
 import org.jblas.FloatMatrix
+import java.awt.image.BufferedImage
 
 class MatrixGrayScaleImageEncoder : MatrixImageEncoder {
 
     override fun encode(image: Image): FloatMatrix {
-        val data = FloatMatrix(1, image.width() * image.height())
-        val bi = image.data()
+        return encode(image.data())
+    }
+
+    override fun encode(bi: BufferedImage): FloatMatrix {
+        val data = FloatMatrix(1, bi.width * bi.height)
         var i = 0
-            for (col in 0 until image.width()) {
-                for (row in 0 until image.height()) {
+            for (col in 0 until bi.width ) {
+                for (row in 0 until bi.height) {
 
                     val rgb = bi.getRGB(col, row) and 0xFFFFFF
 
