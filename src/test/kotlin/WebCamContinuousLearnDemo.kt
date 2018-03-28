@@ -4,11 +4,9 @@ import com.kennycason.nn.AutoEncoder
 import com.kennycason.nn.DeepAutoEncoder
 import com.kennycason.nn.convolution.ConvolutedAutoEncoder
 import com.kennycason.nn.convolution.Dim
-import com.kennycason.nn.data.image.MatrixGrayScaleImageDecoder
-import com.kennycason.nn.data.image.MatrixGrayScaleImageEncoder
-import com.kennycason.nn.data.image.MatrixRGBImageDecoder
-import com.kennycason.nn.data.image.MatrixRGBImageEncoder
+import com.kennycason.nn.data.image.*
 import com.kennycason.nn.learning_rate.FixedLearningRate
+import com.kennycason.nn.optimization.FeatureActivator
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.image.BufferedImage
@@ -23,13 +21,17 @@ fun main(args: Array<String>) {
     WebCamContinuousLearnDemo().run()
 }
 
+data class AutoEncoderConfig(
+        val autoEncoder: DeepAutoEncoder,
+        val imageEncoder: MatrixImageEncoder,
+        val imageDecoder: MatrixImageDecoder)
+
 class WebCamContinuousLearnDemo {
-    val screenWidth = 176 * 3 * 2
-    val screenHeight = 144 * 3 * 2
+    val screenWidth = 176 * 5
+    val screenHeight = 144 * 5
     val saveImage = false
 
     fun run() {
-
         val frame = JFrame()
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
         frame.setSize(screenWidth, screenHeight)
@@ -39,69 +41,16 @@ class WebCamContinuousLearnDemo {
         val webcam = Webcam.getDefault()
         webcam.open()
 
-        // black/white
-        val layer1 = ConvolutedAutoEncoder(
-                visibleDim = Dim(176, 144),
-                hiddenDim = Dim(88, 72),
-                partitions = Dim(8, 8),
-                learningRate = FixedLearningRate(),
-                log = false
-        )
-        val layer2 =  ConvolutedAutoEncoder(
-                visibleDim = Dim(88, 72),
-                hiddenDim = Dim(22, 36),
-                partitions = Dim(11, 6),
-                learningRate = FixedLearningRate(),
-                log = false
-        )
-        val layer3 = AutoEncoder(
-                visibleSize = 22 * 36,
-                hiddenSize = 250,
-                learningRate = FixedLearningRate(),
-                log = false
-        )
+        val useColor = false
 
-        val autoEncoder = DeepAutoEncoder(
-                layers = arrayOf<AbstractAutoEncoder>(layer1, layer2, layer3),
-                log = true)
+        val autoEncoderConfig = when (useColor) {
+            true -> buildColoredAutoEncoder()
+            false -> buildGrayscaleAutoEncoder()
+        }
 
-        val encoder = MatrixGrayScaleImageEncoder()
-        val decoder = MatrixGrayScaleImageDecoder(rows = 144)
-
-        // Color network
-//        val layer1 = ConvolutedAutoEncoder(
-//                visibleDim = Dim(176 * 3, 144),
-//                hiddenDim = Dim(176, 72),
-//                partitions = Dim(16, 8),
-//                learningRate = FixedLearningRate(),
-//                log = false
-//        )
-//        val layer2 = ConvolutedAutoEncoder(
-//                visibleDim = Dim(176, 72),
-//                hiddenDim = Dim(88, 36),
-//                partitions = Dim(8, 6),
-//                learningRate = FixedLearningRate(),
-//                log = false
-//        )
-//        val layer3 =  ConvolutedAutoEncoder(
-//                visibleDim = Dim(88, 36),
-//                hiddenDim = Dim(22, 12),
-//                partitions = Dim(11, 6),
-//                learningRate = FixedLearningRate(),
-//                log = false
-//        )
-//        val layer4 = AutoEncoder(
-//                visibleSize = 22 * 12,
-//                hiddenSize = 250,
-//                learningRate = FixedLearningRate(),
-//                log = false
-//        )
-//
-//        val autoEncoder = DeepAutoEncoder(
-//                layers = arrayOf<AbstractAutoEncoder>(layer1, layer2, layer3, layer4),
-//                log = true)
-//        val encoder = MatrixRGBImageEncoder()
-//        val decoder = MatrixRGBImageDecoder(rows = 144)
+        val autoEncoder = autoEncoderConfig.autoEncoder
+        val encoder = autoEncoderConfig.imageEncoder
+        val decoder = autoEncoderConfig.imageDecoder
 
         println("dim ${webcam.image.width}x${webcam.image.height}")
         
@@ -132,6 +81,92 @@ class WebCamContinuousLearnDemo {
         }
     }
 
+    private fun buildGrayscaleAutoEncoder(): AutoEncoderConfig {
+        val layer1 = ConvolutedAutoEncoder(
+                visibleDim = Dim(176, 144),
+                hiddenDim = Dim(88, 72),
+                partitions = Dim(8, 8),
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val layer2 = ConvolutedAutoEncoder(
+                visibleDim = Dim(88, 72),
+                hiddenDim = Dim(22, 36),
+                partitions = Dim(11, 6),
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val layer3 = AutoEncoder(
+                visibleSize = 22 * 36,
+                hiddenSize = 350,
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val layer4 = AutoEncoder(
+                visibleSize = 350,
+                hiddenSize = 150,
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val layer5 = AutoEncoder(
+                visibleSize = 150,
+                hiddenSize = 250,
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val autoEncoder = DeepAutoEncoder(
+                layers = arrayOf<AbstractAutoEncoder>(layer1, layer2, layer3, layer4, layer5),
+                log = true)
+
+        val encoder = MatrixGrayScaleImageEncoder()
+        val decoder = MatrixGrayScaleImageDecoder(rows = 144)
+
+        return AutoEncoderConfig(autoEncoder, encoder, decoder)
+    }
+
+    private fun buildColoredAutoEncoder(): AutoEncoderConfig {
+        val layer1 = ConvolutedAutoEncoder(
+                visibleDim = Dim(176 * 3, 144),
+                hiddenDim = Dim(176, 72),
+                partitions = Dim(16, 8),
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val layer2 = ConvolutedAutoEncoder(
+                visibleDim = Dim(176, 72),
+                hiddenDim = Dim(88, 36),
+                partitions = Dim(8, 6),
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val layer3 = ConvolutedAutoEncoder(
+                visibleDim = Dim(88, 36),
+                hiddenDim = Dim(22, 12),
+                partitions = Dim(11, 6),
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val layer4 = AutoEncoder(
+                visibleSize = 22 * 12,
+                hiddenSize = 150,
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val layer5 = AutoEncoder(
+                visibleSize = 120,
+                hiddenSize = 250,
+                learningRate = FixedLearningRate(),
+                log = false
+        )
+        val autoEncoder = DeepAutoEncoder(
+                layers = arrayOf<AbstractAutoEncoder>(layer1, layer2, layer3, layer4),
+                log = true)
+
+        val encoder = MatrixRGBImageEncoder()
+        val decoder = MatrixRGBImageDecoder(rows = 144)
+
+        return AutoEncoderConfig(autoEncoder, encoder, decoder)
+    }
 
 
 }
