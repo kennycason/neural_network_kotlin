@@ -1,28 +1,19 @@
 package com.kennycason.nn.convolution
 
-import com.kennycason.nn.AbstractAutoEncoder
 import com.kennycason.nn.AutoEncoder
 import com.kennycason.nn.DeepAutoEncoder
-import com.kennycason.nn.data.image.*
+import com.kennycason.nn.data.image.CompositeImageReader
+import com.kennycason.nn.data.image.CompositeImageWriter
+import com.kennycason.nn.data.image.MatrixRGBImageDecoder
+import com.kennycason.nn.data.image.MatrixRGBImageEncoder
 import com.kennycason.nn.learning_rate.FixedLearningRate
 import org.jblas.FloatMatrix
 import org.junit.Test
-
 import java.awt.Graphics
 import java.util.*
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.WindowConstants
-
-/**
- * Created by kenny on 12/4/16
- *
- * Any live cell with fewer than two live neighbours dies, as if caused by under-population.
- * Any live cell with two or three live neighbours lives on to the next generation.
- * Any live cell with more than three live neighbours dies, as if by over-population.
- * Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
- */
-
 
 class DeepHybridConvolutedAutoEncoderPokemonJFrameDemo {
 
@@ -34,7 +25,7 @@ class DeepHybridConvolutedAutoEncoderPokemonJFrameDemo {
         val saveImage = false
 
         val xs = CompositeImageReader.read(
-                file = "/data/image/pokemon_151_dark_bg.png",
+                file = "data/image/pokemon_151_dark_bg.png",
                 matrixImageEncoder = MatrixRGBImageEncoder(),
                 rows = 11,
                 cols = 15,
@@ -91,7 +82,7 @@ class DeepHybridConvolutedAutoEncoderPokemonJFrameDemo {
 
 
         val layer = DeepAutoEncoder(
-                layers = arrayOf<AbstractAutoEncoder>(
+                layers = arrayOf(
                         layer1, layer2/*, layer3, layer4, layer5, layer6*/),
                 log = true)
 
@@ -100,9 +91,9 @@ class DeepHybridConvolutedAutoEncoderPokemonJFrameDemo {
         val n = 151
 
         val frame = JFrame()
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+        frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
         frame.setSize(screenWidth, screenHeight)
-        frame.setVisible(true)
+        frame.isVisible = true
 
         val panel = object: JPanel() {
             override fun paintComponent(g: Graphics) {

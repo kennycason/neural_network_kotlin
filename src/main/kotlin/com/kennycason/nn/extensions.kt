@@ -8,7 +8,7 @@ inline fun <reified INNER> array2d(sizeOuter: Int, sizeInner: Int,
 fun FloatMatrix.apply(fn : (x: Float) -> Float) = applyi(fn, this, FloatMatrix(rows, columns))
 
 fun FloatMatrix.applyi(fn : (x: Float) -> Float) : FloatMatrix {
-    return applyi(fn, this, FloatMatrix(rows, columns))
+    return applyi(fn, this, this)
 }
 
 fun FloatMatrix.applyi(fn : (x: Float) -> Float, other: FloatMatrix, result: FloatMatrix) : FloatMatrix {

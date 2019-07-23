@@ -1,7 +1,6 @@
 package com.kennycason.nn.data.image
 
 import java.awt.Color
-import java.awt.Image
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
 import java.io.File
@@ -13,8 +12,7 @@ class Image {
     val bi: BufferedImage
 
     constructor(file: String) {
-        println("file: " + file)
-        val resource = Image::class.java.getResourceAsStream(file)
+        val resource = Thread.currentThread().contextClassLoader.getResourceAsStream(file)
         if (resource != null) {
             bi = ImageIO.read(resource)
             return
@@ -58,7 +56,7 @@ class Image {
     }
 
     fun save(file: String) {
-        println("Writing file: " + file)
+        println("Writing file: $file")
         ImageIO.write(bi!!, getFormat(file), File(file))
     }
 
@@ -87,7 +85,7 @@ class Image {
             g.dispose()
         }
 
-        println("Writing file: " + file)
+        println("Writing file: $file")
         ImageIO.write(newImage, getFormat(file), File(file))
     }
 

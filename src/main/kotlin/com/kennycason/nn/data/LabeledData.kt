@@ -1,6 +1,5 @@
 package com.kennycason.nn.data
 
-import com.sun.xml.internal.fastinfoset.util.StringArray
 import org.jblas.FloatMatrix
 
 

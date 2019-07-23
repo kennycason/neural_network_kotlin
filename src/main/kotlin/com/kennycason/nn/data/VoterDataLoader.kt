@@ -1,11 +1,8 @@
 package com.kennycason.nn.data
 
-import com.sun.xml.internal.fastinfoset.util.StringArray
 import org.apache.commons.io.IOUtils
 import org.jblas.FloatMatrix
 import java.awt.Image
-import java.io.File
-import javax.imageio.ImageIO
 
 
 object VoterDataLoader {

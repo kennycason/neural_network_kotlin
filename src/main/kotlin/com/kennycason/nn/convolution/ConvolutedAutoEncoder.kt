@@ -8,7 +8,7 @@ import com.kennycason.nn.math.Errors
 import com.kennycason.nn.math.Functions
 import org.jblas.FloatMatrix
 import java.util.*
-import java.util.concurrent.*
+import java.util.concurrent.Executors
 
 
 class ConvolutedAutoEncoder(val visibleDim: Dim,
@@ -45,7 +45,7 @@ class ConvolutedAutoEncoder(val visibleDim: Dim,
         }
     }
 
-    private val autoencoders = Array<AutoEncoder>((visibleDim.rows / visibleChunkRows) * (visibleDim.cols / visibleChunkCols), {
+    private val autoencoders = Array((visibleDim.rows / visibleChunkRows) * (visibleDim.cols / visibleChunkCols)) {
         AutoEncoder(
                 visibleSize = visibleChunkRows * visibleChunkCols,
                 hiddenSize = hiddenChunkRows * hiddenChunkCols,
@@ -54,7 +54,7 @@ class ConvolutedAutoEncoder(val visibleDim: Dim,
                 hiddenActivation = hiddenActivation,
                 log = log
         )
-    })
+    }
 
     override fun learn(xs: List<FloatMatrix>, steps: Int) {
         (0.. steps).forEach { i ->
@@ -87,7 +87,7 @@ class ConvolutedAutoEncoder(val visibleDim: Dim,
         val executorService = Executors.newFixedThreadPool(8) // make configurable
         executorService.invokeAll(
                 (0 until autoencoders.size).map { i ->
-                    Executors.callable({ autoencoders[i].learn(xs[i], steps) })
+                    Executors.callable { autoencoders[i].learn(xs[i], steps) }
                 }
         )
     }

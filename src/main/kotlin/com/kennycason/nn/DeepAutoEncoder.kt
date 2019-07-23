@@ -13,8 +13,6 @@ import java.util.*
  * Can add both AutoEncoder or ConvolutedAutoEncoder layers
  */
 class DeepAutoEncoder(val layers: Array<AbstractAutoEncoder>,
-                      private val visibleActivation: ActivationFunction = Functions.Sigmoid,
-                      private val hiddenActivation: ActivationFunction = Functions.Sigmoid,
                       private val log: Boolean = false) {
 
     private val random = Random()
@@ -26,16 +24,16 @@ class DeepAutoEncoder(val layers: Array<AbstractAutoEncoder>,
                 log: Boolean = false
                 ) : this(
             layers = Array(
-                    layerDimensions.size,
-                    {i ->
-                        AutoEncoder(
-                                learningRate = learningRate,
-                                visibleSize = layerDimensions[i][0],
-                                hiddenSize = layerDimensions[i][1],
-                                visibleActivation = visibleActivation,
-                                hiddenActivation = hiddenActivation,
-                                log = log)
-                    }),
+                    layerDimensions.size
+            ) { i ->
+                AutoEncoder(
+                        learningRate = learningRate,
+                        visibleSize = layerDimensions[i][0],
+                        hiddenSize = layerDimensions[i][1],
+                        visibleActivation = visibleActivation,
+                        hiddenActivation = hiddenActivation,
+                        log = log)
+            },
             log = log
     )
 

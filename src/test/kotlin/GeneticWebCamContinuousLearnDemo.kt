@@ -1,11 +1,13 @@
 
 import com.github.sarxos.webcam.Webcam
-import com.kennycason.nn.AbstractAutoEncoder
 import com.kennycason.nn.AutoEncoder
 import com.kennycason.nn.DeepAutoEncoder
 import com.kennycason.nn.convolution.ConvolutedAutoEncoder
 import com.kennycason.nn.convolution.Dim
-import com.kennycason.nn.data.image.*
+import com.kennycason.nn.data.image.MatrixImageDecoder
+import com.kennycason.nn.data.image.MatrixImageEncoder
+import com.kennycason.nn.data.image.MatrixRGBImageDecoder
+import com.kennycason.nn.data.image.MatrixRGBImageEncoder
 import com.kennycason.nn.learning_rate.FixedLearningRate
 import java.awt.Graphics
 import java.io.File
@@ -15,20 +17,18 @@ import javax.swing.JPanel
 import javax.swing.WindowConstants
 
 fun main(args: Array<String>) {
-    WebCamContinuousLearnDemo().run()
+    GeneticWebCamContinuousLearnDemo().run()
 }
 
-
-class WebCamContinuousLearnDemo {
+class GeneticWebCamContinuousLearnDemo {
+    val screenWidth = 176 * 5
+    val screenHeight = 144 * 5
+    val saveImage = false
 
     data class AutoEncoderConfig(
             val autoEncoder: DeepAutoEncoder,
             val imageEncoder: MatrixImageEncoder,
             val imageDecoder: MatrixImageDecoder)
-
-    val screenWidth = 176 * 5
-    val screenHeight = 144 * 5
-    val saveImage = false
 
     fun run() {
         val frame = JFrame()
@@ -40,12 +40,7 @@ class WebCamContinuousLearnDemo {
         val webcam = Webcam.getDefault()
         webcam.open()
 
-        val useColor = true
-
-        val autoEncoderConfig = when (useColor) {
-            true -> buildColoredAutoEncoder()
-            false -> buildGrayscaleAutoEncoder()
-        }
+        val autoEncoderConfig = buildColoredAutoEncoder()
 
         val autoEncoder = autoEncoderConfig.autoEncoder
         val encoder = autoEncoderConfig.imageEncoder
@@ -78,49 +73,6 @@ class WebCamContinuousLearnDemo {
         while (true) {
             panel.repaint()
         }
-    }
-
-    private fun buildGrayscaleAutoEncoder(): AutoEncoderConfig {
-        val layer1 = ConvolutedAutoEncoder(
-                visibleDim = Dim(176, 144),
-                hiddenDim = Dim(88, 72),
-                partitions = Dim(8, 8),
-                learningRate = FixedLearningRate(),
-                log = false
-        )
-        val layer2 = ConvolutedAutoEncoder(
-                visibleDim = Dim(88, 72),
-                hiddenDim = Dim(22, 36),
-                partitions = Dim(11, 6),
-                learningRate = FixedLearningRate(),
-                log = false
-        )
-        val layer3 = AutoEncoder(
-                visibleSize = 22 * 36,
-                hiddenSize = 350,
-                learningRate = FixedLearningRate(),
-                log = false
-        )
-        val layer4 = AutoEncoder(
-                visibleSize = 350,
-                hiddenSize = 150,
-                learningRate = FixedLearningRate(),
-                log = false
-        )
-        val layer5 = AutoEncoder(
-                visibleSize = 150,
-                hiddenSize = 250,
-                learningRate = FixedLearningRate(),
-                log = false
-        )
-        val autoEncoder = DeepAutoEncoder(
-                layers = arrayOf<AbstractAutoEncoder>(layer1, layer2, layer3, layer4, layer5),
-                log = true)
-
-        val encoder = MatrixGrayScaleImageEncoder()
-        val decoder = MatrixGrayScaleImageDecoder(rows = 144)
-
-        return AutoEncoderConfig(autoEncoder, encoder, decoder)
     }
 
     private fun buildColoredAutoEncoder(): AutoEncoderConfig {
@@ -158,7 +110,7 @@ class WebCamContinuousLearnDemo {
                 log = false
         )
         val autoEncoder = DeepAutoEncoder(
-                layers = arrayOf<AbstractAutoEncoder>(layer1, layer2, layer3, layer4),
+                layers = arrayOf(layer1, layer2, layer3, layer4),
                 log = true)
 
         val encoder = MatrixRGBImageEncoder()
