@@ -55,6 +55,11 @@ class GeneticAutoEncoder(var visibleSize: Int,
         return this
     }
 
+    fun mutateValue(x: Float): Float {
+        val deltaMutate = (random.nextFloat() / 100.0)
+        if (random.nextBoolean()) {
+    }
+
     fun copy(): GeneticAutoEncoder {
         val autoEncoder = GeneticAutoEncoder(visibleSize, hiddenSize, learningRate, hiddenActivation, visibleActivation, log)
         MatrixUtils.copyTo(encode, autoEncoder.encode)
