@@ -9,18 +9,19 @@ import org.jblas.FloatMatrix
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
+import toFormattedString
 
 
 class AutoEncoderTest {
 
     @Test
     fun randomVector() {
-        val x = FloatMatrix.rand(1, 10)
+        val x = FloatMatrix.rand(1, 5)
 
         val layer = AutoEncoder(
                 learningRate = FixedLearningRate(),
-                visibleSize = 10,
-                hiddenSize = 5,
+                visibleSize = 5,
+                hiddenSize = 3,
                 log = true)
 
         layer.learn(x, steps = 5000)
@@ -29,6 +30,9 @@ class AutoEncoderTest {
         println("input: " + x.toString("%f", "[", "]", ", ", "\n"))
         println("output: " + layer.feedForward(x).toString("%f", "[", "]", ", ", "\n"))
         println("error: $error")
+
+        println("encode: " + layer.encode.toFormattedString())
+        println("decode: " + layer.decode.toFormattedString())
 
         Assert.assertTrue(error < 0.1)
     }

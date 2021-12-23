@@ -1,85 +1,70 @@
 package com.kennycason.nn
 
+import com.kennycason.nn.genetic.Generation
 import com.kennycason.nn.genetic.GeneticAutoEncoder
 import com.kennycason.nn.learning_rate.FixedLearningRate
 import com.kennycason.nn.math.Errors
 import org.jblas.FloatMatrix
 import org.junit.Assert
 import org.junit.Test
+import toFormattedString
 import java.util.*
 
 // doesn't work yet WIP
 class GeneticAutoEncoderTest {
     private val random = Random()
 
-    private val visibleSize = 10
-    private val hiddenSize = 5
-    private val generationSize = 20
-    private val trainingIterations = 100_000
-    private val mutationRate = 0.01f
+    private val visibleSize = 5
+    private val hiddenSize = 3
+    private val generationSize = 100
+    private val trainingIterations = 1_000
+    private val printIterationInterval = 10
+    private val mutationRate = 0.05f
 
     @Test
     fun randomVector() {
         val x = FloatMatrix.rand(1, visibleSize)
 
-        val generation = buildGeneration(generationSize)
+        println("learn x: ${x.toFormattedString()}")
+
+        var generation = buildGeneration(generationSize)
 
         (0 until trainingIterations).forEach { i -> // iteration
-            val nextGeneration = evaluateGeneration(generation, x)
-            generation.clear()
-            generation.addAll(nextGeneration)
+            generation = Generation.live(generation, x,
+                generationSize = generationSize,
+                mutationRate = mutationRate
+            )
 
-            val mostFit = mostFit(generation, x)
-            if (i % 10_000 == 0) {
+            val mostFit = Generation.mostFit(generation, x)
+            if (i % printIterationInterval == 0) {
                 println("$i, ${mostFit.first}")
+//                println("encode: " + mostFit.second.encode.toFormattedString())
+//                println("decode: " + mostFit.second.decode.toFormattedString())
             }
         }
 
-        val mostFit = mostFit(generation, x).second
+        val mostFit = Generation.mostFit(generation, x).second
 
         val error = Errors.compute(x, mostFit.feedForward(x))
-        println("input: " + x.toString("%f", "[", "]", ", ", "\n"))
-        println("output: " + mostFit.feedForward(x).toString("%f", "[", "]", ", ", "\n"))
+        println("input: " + x.toFormattedString())
+        println("output: " + mostFit.feedForward(x).toFormattedString())
         println("error: $error")
 
-        Assert.assertTrue(error < 0.1)
+        println("encode: " + mostFit.encode.toFormattedString())
+        println("decode: " + mostFit.decode.toFormattedString())
+
+        Assert.assertTrue(error < 0.01)
     }
-
-    private fun evaluateGeneration(generation: List<GeneticAutoEncoder>, x: FloatMatrix): List<GeneticAutoEncoder> {
-        val nextGeneration = mutableListOf<GeneticAutoEncoder>()
-        val mostFit = takeTopNFit(generation, x, 5)
-        nextGeneration.addAll(mostFit)
-        while (nextGeneration.size < generationSize) {
-            nextGeneration.add(randomlyBreed(mostFit))
-        }
-        return nextGeneration
-    }
-
-    private fun mostFit(nns: List<GeneticAutoEncoder>, x: FloatMatrix) = sortByFitness(nns, x).first()
-
-    private fun randomlyBreed(mostFit: List<GeneticAutoEncoder>) =
-            mostFit[random.nextInt(mostFit.size)]
-                    .copy()
-                    .mutate(mutationRate)
-
-    private fun takeTopNFit(nns: List<GeneticAutoEncoder>, x: FloatMatrix, n: Int) =
-            sortByFitness(nns, x)
-                    .take(n)
-                    .map { fitnessAndNn -> fitnessAndNn.second }
-
-    private fun sortByFitness(nns: List<GeneticAutoEncoder>, x: FloatMatrix) = nns
-            .map { nn -> Pair(nn.fitness(x), nn) }
-            .sortedBy { fitnessAndNn -> fitnessAndNn.first }
-            .toList()
 
     private fun buildGeneration(size: Int) = (0 until size)
-            .map {
-                GeneticAutoEncoder(
-                        learningRate = FixedLearningRate(),
-                        visibleSize = visibleSize,
-                        hiddenSize = hiddenSize,
-                        log = false)
-            }
-            .toMutableList()
+        .map {
+            GeneticAutoEncoder(
+                learningRate = FixedLearningRate(),
+                visibleSize = visibleSize,
+                hiddenSize = hiddenSize,
+                log = false
+            )
+        }
+        .toList()
 
 }
