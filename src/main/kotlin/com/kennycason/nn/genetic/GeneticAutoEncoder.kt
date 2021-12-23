@@ -47,7 +47,7 @@ class GeneticAutoEncoder(var visibleSize: Int,
         decode.applyi { x ->
             if (random.nextFloat() < probability) {
                 i++
-                random.nextFloat()
+                mutateValue(x)
             }
             else { x }
         }
@@ -56,8 +56,11 @@ class GeneticAutoEncoder(var visibleSize: Int,
     }
 
     fun mutateValue(x: Float): Float {
-        val deltaMutate = (random.nextFloat() / 100.0)
+        val deltaMutate = (random.nextFloat() / 100f)
         if (random.nextBoolean()) {
+            return x * deltaMutate
+        }
+        return x * -deltaMutate
     }
 
     fun copy(): GeneticAutoEncoder {

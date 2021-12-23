@@ -12,22 +12,30 @@ import java.util.*
 class GeneticAutoEncoderTest {
     private val random = Random()
 
+    private val visibleSize = 10
+    private val hiddenSize = 5
+    private val generationSize = 20
+    private val trainingIterations = 100_000
+    private val mutationRate = 0.01f
+
     @Test
     fun randomVector() {
-        val x = FloatMatrix.rand(1, 10)
+        val x = FloatMatrix.rand(1, visibleSize)
 
-        val nns = buildGeneration(30)
+        val generation = buildGeneration(generationSize)
 
-        (0 until 10000).forEach { i -> // iteration
-            val nextGeneration = evaluateGeneration(nns, x)
-            nns.clear()
-            nns.addAll(nextGeneration)
+        (0 until trainingIterations).forEach { i -> // iteration
+            val nextGeneration = evaluateGeneration(generation, x)
+            generation.clear()
+            generation.addAll(nextGeneration)
 
-            val mostFit = mostFit(nns, x)
-            println("$i, ${mostFit.first}")
+            val mostFit = mostFit(generation, x)
+            if (i % 10_000 == 0) {
+                println("$i, ${mostFit.first}")
+            }
         }
 
-        val mostFit = mostFit(nns, x).second
+        val mostFit = mostFit(generation, x).second
 
         val error = Errors.compute(x, mostFit.feedForward(x))
         println("input: " + x.toString("%f", "[", "]", ", ", "\n"))
@@ -37,11 +45,11 @@ class GeneticAutoEncoderTest {
         Assert.assertTrue(error < 0.1)
     }
 
-    private fun evaluateGeneration(nns: List<GeneticAutoEncoder>, x: FloatMatrix): List<GeneticAutoEncoder> {
+    private fun evaluateGeneration(generation: List<GeneticAutoEncoder>, x: FloatMatrix): List<GeneticAutoEncoder> {
         val nextGeneration = mutableListOf<GeneticAutoEncoder>()
-        val mostFit = takeTopNFit(nns, x, 5)
+        val mostFit = takeTopNFit(generation, x, 5)
         nextGeneration.addAll(mostFit)
-        while (nextGeneration.size < 30) {
+        while (nextGeneration.size < generationSize) {
             nextGeneration.add(randomlyBreed(mostFit))
         }
         return nextGeneration
@@ -52,7 +60,7 @@ class GeneticAutoEncoderTest {
     private fun randomlyBreed(mostFit: List<GeneticAutoEncoder>) =
             mostFit[random.nextInt(mostFit.size)]
                     .copy()
-                    .mutate(0.02f)
+                    .mutate(mutationRate)
 
     private fun takeTopNFit(nns: List<GeneticAutoEncoder>, x: FloatMatrix, n: Int) =
             sortByFitness(nns, x)
@@ -68,8 +76,8 @@ class GeneticAutoEncoderTest {
             .map {
                 GeneticAutoEncoder(
                         learningRate = FixedLearningRate(),
-                        visibleSize = 10,
-                        hiddenSize = 5,
+                        visibleSize = visibleSize,
+                        hiddenSize = hiddenSize,
                         log = false)
             }
             .toMutableList()
