@@ -16,8 +16,8 @@ class AutoEncoder(var visibleSize: Int,
                   private val log: Boolean = true) : AbstractAutoEncoder() {
 
     private val random = Random()
-    val encode: FloatMatrix    // weight matrix that learns one level of encoding
-    val decode: FloatMatrix    // weight matrix that learns one level of decoding
+    var encode: FloatMatrix    // weight matrix that learns one level of encoding
+    var decode: FloatMatrix    // weight matrix that learns one level of decoding
 
     init {
         if (visibleSize * hiddenSize <= 0) { // also checks for integer overflow

@@ -169,7 +169,7 @@ test accuracy %: 97.4099999293685%
 
 I was successfully able to use genetic algorithms to incrementally mutate the weights of a randomly initialized Autoencoder.
 I was surprised how fast the algorithm converged on the optimal solution. 
-It outperformed Back-Error Propagation when learning a single random vector.
+It outperformed Gradient Descent when learning a single random 30D vector.
 The network was only tasked with learning a single randomly generated vectors.
 
 <img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/autoencoder_genetic_algorithm_5x3.png" width="400px"/>
