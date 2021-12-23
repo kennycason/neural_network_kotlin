@@ -20,7 +20,7 @@ object MNISTAutoEncoderAccuracyDemo {
      * single layer convolution + fc autoencoder + 2 layer nn = 89.5%
      *
      */
-    class experiment {
+    class Experiment1 {
 
         @Test
         fun run() {
@@ -43,7 +43,7 @@ object MNISTAutoEncoderAccuracyDemo {
                     errors++
                 }
             }
-            println("errors: $errors")
+            println("errors: $errors/$n")
             println("error %: ${errors.toFloat() / labels.size * 100.0}%")
         }
 
@@ -119,7 +119,7 @@ object MNISTAutoEncoderAccuracyDemo {
      *
      * Result: 82% accuracy
      */
-    object Experiment1 {
+    class Experiment2 {
 
         @Test
         fun run() {
@@ -205,7 +205,7 @@ object MNISTAutoEncoderAccuracyDemo {
         }
     }
 
-    fun selectClass(label: FloatMatrix): Int {
+    private fun selectClass(label: FloatMatrix): Int {
         var bestClass = -1
         var bestError = 1.0f
         (0 until 10).forEach { i ->
@@ -217,7 +217,7 @@ object MNISTAutoEncoderAccuracyDemo {
         return bestClass
     }
 
-    fun buildLabelVectors(labels: List<Int>): List<FloatMatrix> {
+    private fun buildLabelVectors(labels: List<Int>): List<FloatMatrix> {
         return labels.map { label ->
             val vector = FloatMatrix(1, 10)
             vector.put(label, 1.0f)

@@ -81,8 +81,8 @@ class NeuralNetwork(layerSizes: Array<Int>,
             // y, is the teacher signal (ideal output), yEstimated is our network's current guess.
             val yError = y.sub(yEstimated)
             val yDelta = yError
-                    .mul(yEstimated.apply(outputActivation::df)) // error delta * derivative of activation function (sigmoid factored out)
-                    .mul(learningRate.get())
+                .mul(yEstimated.apply(outputActivation::df)) // error delta * derivative of activation function (sigmoid factored out)
+                .mul(learningRate.get())
 
             val contributingOutput = intermediateFeatures[intermediateFeatures.size - 2]
             val errorGradients = contributingOutput.transpose().mmul(yDelta)
@@ -90,7 +90,9 @@ class NeuralNetwork(layerSizes: Array<Int>,
 
 
 
-            if (layerWeights.size == 1) { return@forEach }
+            if (layerWeights.size == 1) {
+                return@forEach
+            }
 
             // propagate to previous layers
             var nextLayerDelta = yDelta
@@ -109,13 +111,13 @@ class NeuralNetwork(layerSizes: Array<Int>,
                 }
                 val layerOutput = intermediateFeatures[i + 1]
                 val layerDelta = layerError
-                        .mul(layerOutput.apply(hiddenActivation::df))
+                    .mul(layerOutput.apply(hiddenActivation::df))
 
                 // multiply errors by the contributing input
-                val contributingOutput = intermediateFeatures[i]
-                val layerErrorGradients = contributingOutput
-                        .transpose()
-                        .mmul(layerDelta)
+                val contributingOutput2 = intermediateFeatures[i]
+                val layerErrorGradients = contributingOutput2
+                    .transpose()
+                    .mmul(layerDelta)
 
                 // update weights
                 currentLayerWeights.addi(layerErrorGradients)
@@ -130,9 +132,10 @@ class NeuralNetwork(layerSizes: Array<Int>,
     fun feedForward(x: FloatMatrix): FloatMatrix {
         var currentFeature = x
         (0 until layerWeights.size).forEach { i ->
-            val activationFunction = if (i == layerWeights.size - 1) { outputActivation::f } else { hiddenActivation::f }
-            currentFeature = currentFeature.mmul(layerWeights[i]).apply(activationFunction)
-
+            val activationFunction = getActivationFunction(i)
+            currentFeature = currentFeature
+                .mmul(layerWeights[i])
+                .apply(activationFunction)
         }
         return currentFeature
     }
@@ -142,11 +145,23 @@ class NeuralNetwork(layerSizes: Array<Int>,
         features.add(x)
         var currentFeature = x
         (0 until layerWeights.size).forEach { i ->
-            val activationFunction = if (i == layerWeights.size - 1) { outputActivation::f } else { hiddenActivation::f }
-            currentFeature = currentFeature.mmul(layerWeights[i]).apply(activationFunction)
+            val activationFunction = getActivationFunction(i)
+            currentFeature = currentFeature
+                .mmul(layerWeights[i])
+                .apply(activationFunction)
+
             features.add(currentFeature)
         }
         return Pair(currentFeature, features)
+    }
+
+    private fun getActivationFunction(i: Int): (Float) -> Float {
+        return if (i == layerWeights.size - 1) {
+            outputActivation::f
+        }
+        else {
+            hiddenActivation::f
+        }
     }
 
 }
