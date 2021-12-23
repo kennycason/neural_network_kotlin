@@ -1,6 +1,7 @@
 package com.kennycason.nn
 
 import com.kennycason.nn.genetic.Generation
+import com.kennycason.nn.genetic.Generation.buildGeneration
 import com.kennycason.nn.genetic.GeneticAutoEncoder
 import com.kennycason.nn.learning_rate.FixedLearningRate
 import com.kennycason.nn.math.Errors
@@ -12,7 +13,6 @@ import java.util.*
 
 // doesn't work yet WIP
 class GeneticAutoEncoderTest {
-    private val random = Random()
 
     private val visibleSize = 5
     private val hiddenSize = 3
@@ -27,7 +27,7 @@ class GeneticAutoEncoderTest {
 
         println("learn x: ${x.toFormattedString()}")
 
-        var generation = buildGeneration(generationSize)
+        var generation = buildGeneration(generationSize, visibleSize, hiddenSize)
 
         (0 until trainingIterations).forEach { i -> // iteration
             generation = Generation.live(generation, x,
@@ -55,16 +55,5 @@ class GeneticAutoEncoderTest {
 
         Assert.assertTrue(error < 0.01)
     }
-
-    private fun buildGeneration(size: Int) = (0 until size)
-        .map {
-            GeneticAutoEncoder(
-                learningRate = FixedLearningRate(),
-                visibleSize = visibleSize,
-                hiddenSize = hiddenSize,
-                log = false
-            )
-        }
-        .toList()
 
 }

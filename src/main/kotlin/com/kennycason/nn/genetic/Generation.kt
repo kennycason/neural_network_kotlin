@@ -1,5 +1,6 @@
 package com.kennycason.nn.genetic
 
+import com.kennycason.nn.learning_rate.FixedLearningRate
 import org.jblas.FloatMatrix
 import java.util.*
 
@@ -34,6 +35,17 @@ object Generation {
     private fun sortByFitness(nns: List<GeneticAutoEncoder>, x: FloatMatrix) = nns
         .map { nn -> Pair(nn.fitness(x), nn) }
         .sortedBy { fitnessAndNn -> fitnessAndNn.first }
+        .toList()
+
+    fun buildGeneration(size: Int, visibleSize: Int, hiddenSize: Int) = (0 until size)
+        .map {
+            GeneticAutoEncoder(
+                learningRate = FixedLearningRate(),
+                visibleSize = visibleSize,
+                hiddenSize = hiddenSize,
+                log = false
+            )
+        }
         .toList()
 
 }
