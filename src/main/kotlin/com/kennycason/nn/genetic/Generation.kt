@@ -19,7 +19,6 @@ object Generation {
         }
         return nextGeneration
     }
-
     fun mostFit(nns: List<GeneticAutoEncoder>, x: FloatMatrix) = sortByFitness(nns, x).first()
 
     private fun randomlyBreed(topNFit: List<GeneticAutoEncoder>, mutationRate: Float) =

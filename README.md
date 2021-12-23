@@ -11,12 +11,14 @@ This project is my Neural Network playground in Kotlin. I'll be porting all my m
 - Feature Clustering via Autoencoder
 - Error Backpropagation Multi-Layer Perceptron
 - Webcam Integration
+- Genetic Algorithm + Autoencoder
 
 
 # Training Algorithms
 
 - Stochastic Gradient Descent
 - Mini-batch size = 1
+- Genetic Algorithms
 
 
 # MNIST Training Results
@@ -162,6 +164,17 @@ test errors: 259
 test error %: 2.590000070631504%
 test accuracy %: 97.4099999293685%
 ```
+
+# Genetic Algorithms + Autoencoder
+
+I was successfully able to use genetic algorithms to incrementally mutate the weights of a randomly initialized Autoencoder.
+I was surprised how fast the algorithm converged on the optimal solution. 
+It outperformed Back-Error Propagation when learning a single random vector.
+The network was only tasked with learning a single randomly generated vectors.
+
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/autoencoder_genetic_algorithm_5x3.png" width="400px"/>
+<img src="https://raw.githubusercontent.com/kennycason/neural_network_kotlin/master/results/data/autoencoder_genetic_algorithm_30x18.png" width="400px"/>
+
 
 # Misc Features
 

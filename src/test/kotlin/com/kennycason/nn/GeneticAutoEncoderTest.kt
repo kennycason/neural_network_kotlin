@@ -14,12 +14,12 @@ import java.util.*
 // doesn't work yet WIP
 class GeneticAutoEncoderTest {
 
-    private val visibleSize = 5
-    private val hiddenSize = 3
+    private val visibleSize = 30
+    private val hiddenSize = 18
     private val generationSize = 100
     private val trainingIterations = 1_000
     private val printIterationInterval = 10
-    private val mutationRate = 0.05f
+    private val mutationRate = 0.007f
 
     @Test
     fun randomVector() {

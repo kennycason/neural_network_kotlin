@@ -35,7 +35,7 @@ class GeneticAutoEncoder(var visibleSize: Int,
         }
     }
 
-    fun mutate(probability: Float): GeneticAutoEncoder {
+    fun mutate(probability: Float, logMutatedWeightCount: Boolean = false): GeneticAutoEncoder {
         var i = 0
         encode.applyi { x ->
             if (random.nextFloat() < probability) {
@@ -51,12 +51,15 @@ class GeneticAutoEncoder(var visibleSize: Int,
             }
             else { x }
         }
-        // println("mutated $i weights")
+        if (logMutatedWeightCount && i.toFloat() / visibleSize > 0.2f) {
+            println("mutated $i weights ${i.toFloat() / visibleSize}")
+        }
         return this
     }
 
     private fun mutateValue(x: Float): Float {
-        val deltaMutate = 0.1f // (random.nex() / 10f)
+        //val deltaMutate = 0.1f
+        val deltaMutate = random.nextFloat() / 10f
         if (random.nextBoolean()) {
             return x + deltaMutate
         }
